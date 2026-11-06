@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { formatPrice } from "@/lib/config";
 import { useCart } from "@/lib/cart/cart-context";
 
@@ -106,10 +107,17 @@ export function CartSheet({ onClose }: { onClose: () => void }) {
 
         {items.length > 0 && (
           <div className="border-t border-neutral-200 px-4 py-3">
-            <div className="flex items-center justify-between text-base font-semibold text-neutral-900">
+            <div className="mb-3 flex items-center justify-between text-base font-semibold text-neutral-900">
               <span>Zwischensumme</span>
               <span>{formatPrice(total)}</span>
             </div>
+            <Link
+              href="/checkout"
+              onClick={onClose}
+              className="block w-full rounded-full bg-orange-500 py-3 text-center text-base font-semibold text-white active:bg-orange-600"
+            >
+              Zur Kasse
+            </Link>
           </div>
         )}
       </div>

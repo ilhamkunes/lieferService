@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 import { formatPrice } from "@/lib/config";
 import { useCart } from "@/lib/cart/cart-context";
 import { CartSheet } from "@/components/cart/cart-sheet";
@@ -8,8 +9,10 @@ import { CartSheet } from "@/components/cart/cart-sheet";
 export function CartBar() {
   const { itemCount, total } = useCart();
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
 
   if (itemCount === 0) return null;
+  if (pathname?.startsWith("/checkout")) return null;
 
   return (
     <>
