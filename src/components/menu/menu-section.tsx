@@ -3,17 +3,19 @@ import {
   getOpeningHours,
   getProducts,
 } from "@/lib/supabase/menu";
-import { getOpenStatus } from "@/lib/opening-hours";
+import { getRestaurantSettings } from "@/lib/supabase/settings";
+import { getAvailability } from "@/lib/availability";
 import { MenuClient, type GroupedCategory } from "@/components/menu/menu-client";
 
 export async function MenuSection() {
-  const [categories, products, openingHours] = await Promise.all([
+  const [categories, products, openingHours, settings] = await Promise.all([
     getCategories(),
     getProducts(),
     getOpeningHours(),
+    getRestaurantSettings(),
   ]);
 
-  const status = getOpenStatus(openingHours, new Date());
+  const status = getAvailability(openingHours, settings, new Date());
 
   const grouped: GroupedCategory[] = categories.map((category) => ({
     category,

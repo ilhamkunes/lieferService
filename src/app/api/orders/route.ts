@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/server";
-import { getOpenStatus } from "@/lib/opening-hours";
+import { getAvailability } from "@/lib/availability";
 import { isValidPickupTime } from "@/lib/pickup";
 import { isValidEmail } from "@/lib/validation";
-import type { OpeningHour } from "@/lib/supabase/types";
+import type { OpeningHour, RestaurantSettings } from "@/lib/supabase/types";
 
 type OrderItemInput = { productId: string; adet: number };
 
@@ -63,18 +63,36 @@ export async function POST(request: Request) {
   const { data: hoursData, error: hoursErr } = await supabaseAdmin
     .from("opening_hours")
     .select("gun, acilis, kapanis, kapali");
-  if (hoursErr || !hoursData) {
+  const { data: settingsData, error: settingsErr } = await supabaseAdmin
+    .from("restaurant_settings")
+    .select("*")
+    .eq("id", 1)
+    .single();
+  if (hoursErr || !hoursData || settingsErr || !settingsData) {
     return NextResponse.json(
-      { error: "Serverfehler (Öffnungszeiten)." },
+      { error: "Serverfehler (Öffnungszeiten/Einstellungen)." },
       { status: 500 }
     );
   }
   const hours = hoursData as OpeningHour[];
+  const settings = settingsData as RestaurantSettings;
   const now = new Date();
-  const status = getOpenStatus(hours, now);
-  if (!status.isOpen) {
+  const availability = getAvailability(hours, settings, now);
+  if (!availability.isOpen) {
     return NextResponse.json(
       { error: "Wir sind aktuell geschlossen und nehmen keine Bestellungen an." },
+      { status: 409 }
+    );
+  }
+  if (body.tur === "teslimat" && !availability.deliveryAvailable) {
+    return NextResponse.json(
+      { error: "Lieferung ist aktuell pausiert." },
+      { status: 409 }
+    );
+  }
+  if (body.tur === "gelal" && !availability.pickupAvailable) {
+    return NextResponse.json(
+      { error: "Abholung ist aktuell pausiert." },
       { status: 409 }
     );
   }

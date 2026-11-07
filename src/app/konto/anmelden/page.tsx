@@ -1,10 +1,21 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { Suspense, useState, type FormEvent } from "react";
+import { useSearchParams } from "next/navigation";
 import { supabaseBrowser } from "@/lib/supabase/client";
 import { isValidEmail } from "@/lib/validation";
 
 export default function LoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <LoginForm />
+    </Suspense>
+  );
+}
+
+function LoginForm() {
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect") || "/konto";
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -20,7 +31,7 @@ export default function LoginPage() {
     setError(null);
     const { error } = await supabaseBrowser.auth.signInWithOtp({
       email,
-      options: { emailRedirectTo: `${window.location.origin}/konto` },
+      options: { emailRedirectTo: `${window.location.origin}${redirect}` },
     });
     setSubmitting(false);
     if (error) {

@@ -5,7 +5,8 @@ import Link from "next/link";
 import { useCart } from "@/lib/cart/cart-context";
 import { formatPrice } from "@/lib/config";
 import { getOpeningHours } from "@/lib/supabase/menu";
-import { getOpenStatus } from "@/lib/opening-hours";
+import { getRestaurantSettings } from "@/lib/supabase/settings";
+import { getAvailability } from "@/lib/availability";
 import { getPickupSlotsForToday } from "@/lib/pickup";
 import { findDeliveryZone, type DeliveryZone } from "@/lib/supabase/delivery";
 import {
@@ -13,7 +14,11 @@ import {
   isValidGermanPostalCode,
   isValidPhone,
 } from "@/lib/validation";
-import type { CustomerAddress, OpeningHour } from "@/lib/supabase/types";
+import type {
+  CustomerAddress,
+  OpeningHour,
+  RestaurantSettings,
+} from "@/lib/supabase/types";
 import { OrderSummary } from "@/components/checkout/order-summary";
 import { FormField, inputClass, inputErrorClass } from "@/components/checkout/form-field";
 import { DeliveryFields } from "@/components/checkout/delivery-fields";
@@ -97,13 +102,17 @@ export default function CheckoutPage() {
   }
 
   const [hours, setHours] = useState<OpeningHour[] | null>(null);
+  const [settings, setSettings] = useState<RestaurantSettings | null>(null);
   const [hoursLoading, setHoursLoading] = useState(true);
   const [now, setNow] = useState<Date | null>(null);
 
   useEffect(() => {
     setNow(new Date());
-    getOpeningHours()
-      .then((h) => setHours(h))
+    Promise.all([getOpeningHours(), getRestaurantSettings()])
+      .then(([h, s]) => {
+        setHours(h);
+        setSettings(s);
+      })
       .finally(() => setHoursLoading(false));
   }, []);
 
@@ -140,10 +149,19 @@ export default function CheckoutPage() {
     () => (hours && now ? getPickupSlotsForToday(hours, now) : []),
     [hours, now]
   );
-  const openStatus = useMemo(
-    () => (hours && now ? getOpenStatus(hours, now) : null),
-    [hours, now]
+  const availability = useMemo(
+    () => (hours && settings && now ? getAvailability(hours, settings, now) : null),
+    [hours, settings, now]
   );
+
+  useEffect(() => {
+    if (!availability) return;
+    if (tur === "teslimat" && !availability.deliveryAvailable && availability.pickupAvailable) {
+      setTur("gelal");
+    } else if (tur === "gelal" && !availability.pickupAvailable && availability.deliveryAvailable) {
+      setTur("teslimat");
+    }
+  }, [availability, tur]);
 
   const ADDRESS_FIELDS = new Set([
     "sokak",
@@ -330,15 +348,19 @@ export default function CheckoutPage() {
     );
   }
 
-  if (openStatus && !openStatus.isOpen) {
+  if (
+    availability &&
+    (!availability.isOpen ||
+      (!availability.deliveryAvailable && !availability.pickupAvailable))
+  ) {
     return (
       <main className="flex-1 px-4 py-8 text-center">
         <p className="font-medium text-red-700">
           Wir sind aktuell geschlossen und nehmen keine Bestellungen an.
         </p>
-        {openStatus.nextOpenLabel && (
+        {availability.nextOpenLabel && (
           <p className="mt-1 text-sm text-neutral-600">
-            Öffnet wieder: {openStatus.nextOpenLabel}
+            Öffnet wieder: {availability.nextOpenLabel}
           </p>
         )}
         <Link
@@ -358,8 +380,9 @@ export default function CheckoutPage() {
       <div className="mb-4 grid grid-cols-2 gap-2">
         <button
           type="button"
+          disabled={availability ? !availability.deliveryAvailable : false}
           onClick={() => setTur("teslimat")}
-          className={`rounded-xl py-3 text-sm font-semibold ${
+          className={`rounded-xl py-3 text-sm font-semibold disabled:opacity-40 ${
             tur === "teslimat"
               ? "bg-orange-500 text-white"
               : "bg-neutral-100 text-neutral-600"
@@ -369,8 +392,9 @@ export default function CheckoutPage() {
         </button>
         <button
           type="button"
+          disabled={availability ? !availability.pickupAvailable : false}
           onClick={() => setTur("gelal")}
-          className={`rounded-xl py-3 text-sm font-semibold ${
+          className={`rounded-xl py-3 text-sm font-semibold disabled:opacity-40 ${
             tur === "gelal"
               ? "bg-orange-500 text-white"
               : "bg-neutral-100 text-neutral-600"
@@ -379,6 +403,12 @@ export default function CheckoutPage() {
           Abholung
         </button>
       </div>
+      {availability && !availability.deliveryAvailable && tur === "teslimat" && (
+        <p className="mb-4 text-sm text-yellow-700">Lieferung ist aktuell pausiert.</p>
+      )}
+      {availability && !availability.pickupAvailable && tur === "gelal" && (
+        <p className="mb-4 text-sm text-yellow-700">Abholung ist aktuell pausiert.</p>
+      )}
 
       {!user && (
         <p className="mb-4 text-sm text-neutral-500">

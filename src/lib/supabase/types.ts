@@ -44,3 +44,59 @@ export type CustomerOrder = {
   toplam: number;
   created_at: string;
 };
+
+export type SiparisDurumu =
+  | "yeni"
+  | "hazirlaniyor"
+  | "teslime_hazir"
+  | "tamamlandi"
+  | "reddedildi";
+
+export type AdminOrder = {
+  id: string;
+  siparis_no: string;
+  musteri_adi: string;
+  telefon: string;
+  eposta: string;
+  tur: "teslimat" | "gelal";
+  sokak: string | null;
+  numara: string | null;
+  posta_kodu: string | null;
+  sehir: string | null;
+  kapi_kat_notu: string | null;
+  alma_saati: string | null;
+  odeme_yontemi: "paypal" | "nakit_veya_kart";
+  odeme_durumu: "bekliyor" | "odendi" | "basarisiz";
+  siparis_durumu: SiparisDurumu;
+  tahmini_hazir_saat: string | null;
+  ara_toplam: number;
+  teslimat_ucreti: number;
+  toplam: number;
+  not_metni: string | null;
+  red_sebebi: string | null;
+  created_at: string;
+};
+
+export type AdminOrderItem = {
+  id: string;
+  urun_adi: string;
+  adet: number;
+  birim_fiyat: number;
+};
+
+export type RestaurantSettings = {
+  id: number;
+  manuel_kapatma: boolean;
+  teslimat_durduruldu: boolean;
+  gelal_durduruldu: boolean;
+  hazirlik_dakika: number;
+  teslimat_dakika: number;
+};
+
+export type DeliveryZoneAdmin = {
+  id: string;
+  posta_kodu: string;
+  teslimat_ucreti: number;
+  minimum_siparis: number;
+  aktif: boolean;
+};
