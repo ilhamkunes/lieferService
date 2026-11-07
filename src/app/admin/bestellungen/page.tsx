@@ -20,6 +20,7 @@ export default function BestellungenPage() {
   const [orders, setOrders] = useState<AdminOrder[]>([]);
   const [tab, setTab] = useState<Tab>("zubereiten");
   const audioCtxRef = useRef<AudioContext | null>(null);
+  const [soundUnlocked, setSoundUnlocked] = useState(false);
 
   function refresh() {
     getActiveOrders().then(setOrders);
@@ -40,35 +41,49 @@ export default function BestellungenPage() {
     };
   }, []);
 
+  function beep() {
+    try {
+      const ctx = audioCtxRef.current;
+      if (!ctx || ctx.state !== "running") return;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.frequency.value = 880;
+      gain.gain.setValueAtTime(0.3, ctx.currentTime);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.25);
+    } catch {
+      // tarayici sesi engellemis olabilir, sessizce gec
+    }
+  }
+
+  // iOS/Safari sesin önce bir dokunuşla açılmasını zorunlu kılar - bu yuzden
+  // AudioContext sadece bu buton tiklamasinda (gercek bir kullanici
+  // etkilesiminde) olusturulup "resume" edilir. Bu olmadan arka planda
+  // (setInterval/Realtime) baslatilan ses iPhone'da hic calismaz.
+  function unlockSound() {
+    try {
+      const ctx = audioCtxRef.current ?? new AudioContext();
+      audioCtxRef.current = ctx;
+      if (ctx.state === "suspended") ctx.resume();
+      setSoundUnlocked(true);
+      // kisa bir test sesi caldirip baglantiyi kesinlestir
+      setTimeout(beep, 50);
+    } catch {
+      setSoundUnlocked(true);
+    }
+  }
+
   const neueCount = orders.filter((o) => o.siparis_durumu === "yeni").length;
 
   useEffect(() => {
-    if (neueCount === 0) return;
-
-    function beep() {
-      try {
-        if (!audioCtxRef.current) {
-          audioCtxRef.current = new AudioContext();
-        }
-        const ctx = audioCtxRef.current;
-        if (ctx.state === "suspended") ctx.resume();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.frequency.value = 880;
-        gain.gain.setValueAtTime(0.3, ctx.currentTime);
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        osc.start();
-        osc.stop(ctx.currentTime + 0.25);
-      } catch {
-        // tarayici sesi engellemis olabilir, sessizce gec
-      }
-    }
-
+    if (neueCount === 0 || !soundUnlocked) return;
     beep();
     const id = setInterval(beep, 1800);
     return () => clearInterval(id);
-  }, [neueCount]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [neueCount, soundUnlocked]);
 
   const zubereiten = orders.filter(
     (o) => o.siparis_durumu === "yeni" || o.siparis_durumu === "hazirlaniyor"
@@ -90,6 +105,19 @@ export default function BestellungenPage() {
 
   return (
     <main className="px-4 py-4">
+      {!soundUnlocked && (
+        <button
+          type="button"
+          onClick={unlockSound}
+          className="mb-4 flex w-full items-center justify-between rounded-lg bg-orange-50 px-4 py-2 text-sm font-medium text-orange-800"
+        >
+          <span>🔔 Ton für neue Bestellungen aktivieren</span>
+          <span className="rounded-full bg-orange-500 px-3 py-1 text-xs font-semibold text-white">
+            Aktivieren
+          </span>
+        </button>
+      )}
+
       <div className="mb-4 flex gap-2">
         {TABS.map((t) => (
           <button
