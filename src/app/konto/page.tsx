@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuthUser } from "@/lib/auth/use-auth-user";
 import { supabaseBrowser } from "@/lib/supabase/client";
@@ -32,7 +33,14 @@ export default function AccountPage() {
   }
 
   return (
-    <main className="flex-1 px-4 py-6 pb-12">
+    <main className="flex-1 px-4 py-6 pb-28">
+      <Link
+        href="/"
+        className="mb-3 inline-block text-sm font-semibold text-orange-600"
+      >
+        ← Zur Speisekarte
+      </Link>
+
       <div className="mb-4 flex items-center justify-between">
         <h1 className="text-lg font-semibold text-neutral-900">Mein Konto</h1>
         <button
