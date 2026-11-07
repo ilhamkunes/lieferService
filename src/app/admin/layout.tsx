@@ -52,9 +52,11 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
 
   return (
     <AdminSettingsProvider>
-      <div className="flex min-h-screen flex-col bg-neutral-50">
-        <AdminNav onLogout={handleLogout} />
-        <PausedBanner />
+      <div className="flex min-h-screen flex-col bg-neutral-50 print:bg-white">
+        <div className="print:hidden">
+          <AdminNav onLogout={handleLogout} />
+          <PausedBanner />
+        </div>
         <div className="flex-1">{children}</div>
       </div>
     </AdminSettingsProvider>

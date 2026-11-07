@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/server";
 import { getPaypalAccessToken, paypalFetch } from "@/lib/paypal";
+import { sendOrderEmails } from "@/lib/order-emails";
 
 export async function POST(request: Request) {
   let body: { orderId?: string; paypalOrderId?: string };
@@ -61,6 +62,8 @@ export async function POST(request: Request) {
     .from("orders")
     .update({ odeme_durumu: "odendi", paypal_islem_no: capture.id })
     .eq("id", order.id);
+
+  await sendOrderEmails(order.id);
 
   return NextResponse.json({ success: true });
 }

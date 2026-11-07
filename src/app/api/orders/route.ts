@@ -3,6 +3,7 @@ import { supabaseAdmin } from "@/lib/supabase/server";
 import { getAvailability } from "@/lib/availability";
 import { isValidPickupTime } from "@/lib/pickup";
 import { isValidEmail } from "@/lib/validation";
+import { sendOrderEmails } from "@/lib/order-emails";
 import type { OpeningHour, RestaurantSettings } from "@/lib/supabase/types";
 
 type OrderItemInput = { productId: string; adet: number };
@@ -254,6 +255,13 @@ export async function POST(request: Request) {
       { error: "Bestellung konnte nicht gespeichert werden." },
       { status: 500 }
     );
+  }
+
+  // Gel-al siparisi direkt onaylanir, odeme dukkanda yapilacagi icin
+  // e-postalari hemen gonderiyoruz. Teslimat siparisleri odeme
+  // tamamlaninca (PayPal capture) e-posta alir.
+  if (body.tur === "gelal") {
+    await sendOrderEmails(order.id);
   }
 
   return NextResponse.json({

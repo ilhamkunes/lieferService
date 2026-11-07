@@ -136,6 +136,14 @@ export function OrderCard({
               In Google Maps öffnen
             </a>
           )}
+          <a
+            href={`/admin/bestellungen/${order.id}/beleg`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block text-orange-600"
+          >
+            Küchenbeleg drucken
+          </a>
         </div>
       )}
 

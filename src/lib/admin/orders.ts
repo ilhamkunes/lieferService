@@ -17,6 +17,16 @@ export async function getActiveOrders(): Promise<AdminOrder[]> {
   return data as AdminOrder[];
 }
 
+export async function getOrderById(orderId: string): Promise<AdminOrder | null> {
+  const { data, error } = await supabaseBrowser
+    .from("orders")
+    .select(ORDER_COLUMNS)
+    .eq("id", orderId)
+    .maybeSingle();
+  if (error) throw error;
+  return data as AdminOrder | null;
+}
+
 export async function getOrderItems(orderId: string): Promise<AdminOrderItem[]> {
   const { data, error } = await supabaseBrowser
     .from("order_items")

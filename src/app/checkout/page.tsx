@@ -297,6 +297,11 @@ export default function CheckoutPage() {
           >
             Gesamt: {formatPrice(success.toplam)}
           </p>
+          {success.paid && (
+            <p className="mt-1 text-sm text-green-700">
+              Eine Bestellbestätigung wurde per E-Mail gesendet.
+            </p>
+          )}
 
           {success.tur === "teslimat" && !success.paid && (
             <div className="mt-4 rounded-lg bg-white p-4">
