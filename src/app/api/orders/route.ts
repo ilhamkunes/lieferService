@@ -228,6 +228,7 @@ export async function POST(request: Request) {
   }
 
   return NextResponse.json({
+    id: order.id,
     siparisNo: order.siparis_no,
     tur: body.tur,
     toplam: order.toplam,

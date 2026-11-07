@@ -18,6 +18,7 @@ import { OrderSummary } from "@/components/checkout/order-summary";
 import { FormField, inputClass, inputErrorClass } from "@/components/checkout/form-field";
 import { DeliveryFields } from "@/components/checkout/delivery-fields";
 import { PickupFields } from "@/components/checkout/pickup-fields";
+import { PaypalButton } from "@/components/checkout/paypal-button";
 
 type Tur = "teslimat" | "gelal";
 
@@ -44,10 +45,12 @@ const EMPTY_FORM: FormState = {
 };
 
 type SuccessResult = {
+  id: string;
   siparisNo: string;
   tur: Tur;
   toplam: number;
   almaSaati: string | null;
+  paid: boolean;
 };
 
 export default function CheckoutPage() {
@@ -172,7 +175,7 @@ export default function CheckoutPage() {
         setSubmitError(data.error ?? "Bestellung konnte nicht gesendet werden.");
         return;
       }
-      setSuccess(data);
+      setSuccess({ ...data, paid: data.tur === "gelal" });
       cart.clear();
     } catch {
       setSubmitError("Netzwerkfehler. Bitte erneut versuchen.");
@@ -184,11 +187,21 @@ export default function CheckoutPage() {
   if (success) {
     return (
       <main className="flex-1 px-4 py-8">
-        <div className="mx-auto max-w-md rounded-xl border border-green-200 bg-green-50 p-6 text-center">
-          <h1 className="text-xl font-semibold text-green-800">
-            Bestellung erhalten
+        <div
+          className={`mx-auto max-w-md rounded-xl border p-6 text-center ${
+            success.paid
+              ? "border-green-200 bg-green-50"
+              : "border-orange-200 bg-orange-50"
+          }`}
+        >
+          <h1
+            className={`text-xl font-semibold ${
+              success.paid ? "text-green-800" : "text-orange-800"
+            }`}
+          >
+            {success.paid ? "Bestellung erhalten" : "Fast geschafft"}
           </h1>
-          <p className="mt-2 text-green-700">
+          <p className={`mt-2 ${success.paid ? "text-green-700" : "text-orange-700"}`}>
             Bestellnummer: <strong>#{success.siparisNo}</strong>
           </p>
           {success.tur === "gelal" && success.almaSaati && (
@@ -201,19 +214,32 @@ export default function CheckoutPage() {
               Uhr
             </p>
           )}
-          <p className="mt-1 text-green-700">Gesamt: {formatPrice(success.toplam)}</p>
-          {success.tur === "teslimat" && (
-            <p className="mt-3 text-sm text-neutral-600">
-              Zahlung steht noch aus – die Online-Bezahlung mit PayPal wird im
-              nächsten Schritt angebunden.
-            </p>
-          )}
-          <Link
-            href="/"
-            className="mt-4 inline-block rounded-full bg-orange-500 px-5 py-2 text-sm font-semibold text-white"
+          <p
+            className={`mt-1 ${success.paid ? "text-green-700" : "text-orange-700"}`}
           >
-            Zurück zur Speisekarte
-          </Link>
+            Gesamt: {formatPrice(success.toplam)}
+          </p>
+
+          {success.tur === "teslimat" && !success.paid && (
+            <div className="mt-4 rounded-lg bg-white p-4">
+              <p className="mb-3 text-sm font-medium text-neutral-700">
+                Bitte jetzt mit PayPal bezahlen:
+              </p>
+              <PaypalButton
+                orderId={success.id}
+                onPaid={() => setSuccess((s) => (s ? { ...s, paid: true } : s))}
+              />
+            </div>
+          )}
+
+          {success.paid && (
+            <Link
+              href="/"
+              className="mt-4 inline-block rounded-full bg-orange-500 px-5 py-2 text-sm font-semibold text-white"
+            >
+              Zurück zur Speisekarte
+            </Link>
+          )}
         </div>
       </main>
     );
