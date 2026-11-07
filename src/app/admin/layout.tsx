@@ -7,6 +7,7 @@ import { checkIsAdmin } from "@/lib/admin/auth";
 import { supabaseBrowser } from "@/lib/supabase/client";
 import { AdminNav } from "@/components/admin/admin-nav";
 import { PausedBanner } from "@/components/admin/paused-banner";
+import { PushNotificationBanner } from "@/components/admin/push-notification-banner";
 import { AdminSettingsProvider } from "@/lib/admin/settings-context";
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
@@ -56,6 +57,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         <div className="print:hidden">
           <AdminNav onLogout={handleLogout} />
           <PausedBanner />
+          <PushNotificationBanner />
         </div>
         <div className="flex-1">{children}</div>
       </div>

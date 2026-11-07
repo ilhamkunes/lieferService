@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase/server";
 import { getPaypalAccessToken, paypalFetch } from "@/lib/paypal";
-import { sendOrderEmails } from "@/lib/order-emails";
+import { notifyNewOrder } from "@/lib/order-emails";
 
 export async function POST(request: Request) {
   const event = await request.json().catch(() => null);
@@ -47,7 +47,7 @@ export async function POST(request: Request) {
           .from("orders")
           .update({ odeme_durumu: "odendi", paypal_islem_no: resource.id })
           .eq("id", order.id);
-        await sendOrderEmails(order.id);
+        await notifyNewOrder(order.id);
       }
     }
   }

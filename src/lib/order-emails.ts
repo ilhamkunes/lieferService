@@ -1,11 +1,13 @@
 import { supabaseAdmin } from "@/lib/supabase/server";
 import { sendEmail } from "@/lib/email";
+import { sendPushToAdmins } from "@/lib/push";
 import {
   customerConfirmationEmail,
   restaurantNotificationEmail,
 } from "@/lib/email-templates";
+import { formatPrice } from "@/lib/config";
 
-export async function sendOrderEmails(orderId: string): Promise<void> {
+export async function notifyNewOrder(orderId: string): Promise<void> {
   const { data: order } = await supabaseAdmin
     .from("orders")
     .select(
@@ -56,4 +58,10 @@ export async function sendOrderEmails(orderId: string): Promise<void> {
       ...restaurantNotificationEmail(emailOrder),
     });
   }
+
+  await sendPushToAdmins({
+    title: `Neue Bestellung #${order.siparis_no}`,
+    body: `${order.tur === "gelal" ? "Abholung" : "Lieferung"} · ${formatPrice(order.toplam)}`,
+    url: "/admin/bestellungen",
+  });
 }
