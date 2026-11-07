@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { formatPrice } from "@/lib/config";
 import {
   acceptOrder,
@@ -26,6 +26,22 @@ function mapsUrl(order: AdminOrder): string {
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
 }
 
+function whatsappUrl(order: AdminOrder, items: AdminOrderItem[]): string {
+  const lines = [
+    `Bestellung #${order.siparis_no}`,
+    order.tur === "gelal"
+      ? `Abholung · ${orderTimeLabel(order)} Uhr`
+      : `Lieferung · ${order.sokak} ${order.numara}, ${order.posta_kodu} ${order.sehir}`,
+    `${order.musteri_adi} · ${order.telefon}`,
+    "",
+    ...items.map((it) => `${it.adet}x ${it.urun_adi}`),
+    "",
+    `Gesamt: ${formatPrice(order.toplam)}`,
+  ];
+  if (order.not_metni) lines.push(`Notiz: ${order.not_metni}`);
+  return `https://wa.me/?text=${encodeURIComponent(lines.join("\n"))}`;
+}
+
 export function OrderCard({
   order,
   defaultMinutes,
@@ -35,21 +51,16 @@ export function OrderCard({
   defaultMinutes: number;
   onChanged: () => void;
 }) {
-  const [expanded, setExpanded] = useState(false);
-  const [items, setItems] = useState<AdminOrderItem[] | null>(null);
+  const [items, setItems] = useState<AdminOrderItem[]>([]);
   const [showAccept, setShowAccept] = useState(false);
   const [showReject, setShowReject] = useState(false);
   const [minutes, setMinutes] = useState(defaultMinutes);
   const [reason, setReason] = useState("");
   const [busy, setBusy] = useState(false);
 
-  async function toggleExpand() {
-    const next = !expanded;
-    setExpanded(next);
-    if (next && items === null) {
-      setItems(await getOrderItems(order.id));
-    }
-  }
+  useEffect(() => {
+    getOrderItems(order.id).then(setItems);
+  }, [order.id]);
 
   async function handleAccept() {
     setBusy(true);
@@ -88,11 +99,7 @@ export function OrderCard({
 
   return (
     <div className="rounded-xl border border-neutral-200 bg-white p-3">
-      <button
-        type="button"
-        onClick={toggleExpand}
-        className="flex w-full items-center gap-3 text-left"
-      >
+      <div className="flex items-center gap-3">
         <CountdownCircle
           target={order.siparis_durumu === "hazirlaniyor" ? order.tahmini_hazir_saat : null}
         />
@@ -110,42 +117,51 @@ export function OrderCard({
           {paidBadge}
           <span className="font-semibold text-neutral-900">{formatPrice(order.toplam)}</span>
         </div>
-      </button>
+      </div>
 
-      {expanded && (
-        <div className="mt-3 space-y-2 border-t border-neutral-100 pt-3 text-sm">
-          {items?.map((it) => (
-            <div key={it.id} className="flex justify-between text-neutral-700">
-              <span>
-                {it.adet}× {it.urun_adi}
-              </span>
-              <span>{formatPrice(it.birim_fiyat * it.adet)}</span>
-            </div>
-          ))}
-          {order.not_metni && (
-            <p className="text-neutral-500">Notiz: {order.not_metni}</p>
-          )}
-          <p className="text-neutral-500">Telefon: {order.telefon}</p>
-          {order.tur === "teslimat" && (
-            <a
-              href={mapsUrl(order)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block text-orange-600"
-            >
-              In Google Maps öffnen
-            </a>
-          )}
+      <div className="mt-3 space-y-1 border-t border-neutral-100 pt-3 text-sm">
+        {items.map((it) => (
+          <div key={it.id} className="flex justify-between text-neutral-700">
+            <span>
+              {it.adet}× {it.urun_adi}
+            </span>
+            <span>{formatPrice(it.birim_fiyat * it.adet)}</span>
+          </div>
+        ))}
+        {order.not_metni && (
+          <p className="pt-1 text-neutral-500">Notiz: {order.not_metni}</p>
+        )}
+        <p className="text-neutral-500">Telefon: {order.telefon}</p>
+      </div>
+
+      <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm">
+        {order.tur === "teslimat" && (
           <a
-            href={`/admin/bestellungen/${order.id}/beleg`}
+            href={mapsUrl(order)}
             target="_blank"
             rel="noopener noreferrer"
-            className="block text-orange-600"
+            className="text-orange-600"
           >
-            Küchenbeleg drucken
+            Google Maps
           </a>
-        </div>
-      )}
+        )}
+        <a
+          href={`/admin/bestellungen/${order.id}/beleg`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-orange-600"
+        >
+          Beleg drucken
+        </a>
+        <a
+          href={whatsappUrl(order, items)}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-green-600"
+        >
+          Per WhatsApp teilen
+        </a>
+      </div>
 
       {/* Aksiyonlar */}
       {order.siparis_durumu === "yeni" && (
