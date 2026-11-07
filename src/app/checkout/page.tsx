@@ -13,12 +13,15 @@ import {
   isValidGermanPostalCode,
   isValidPhone,
 } from "@/lib/validation";
-import type { OpeningHour } from "@/lib/supabase/types";
+import type { CustomerAddress, OpeningHour } from "@/lib/supabase/types";
 import { OrderSummary } from "@/components/checkout/order-summary";
 import { FormField, inputClass, inputErrorClass } from "@/components/checkout/form-field";
 import { DeliveryFields } from "@/components/checkout/delivery-fields";
 import { PickupFields } from "@/components/checkout/pickup-fields";
 import { PaypalButton } from "@/components/checkout/paypal-button";
+import { useAuthUser } from "@/lib/auth/use-auth-user";
+import { supabaseBrowser } from "@/lib/supabase/client";
+import { addMyAddress, getMyAddresses } from "@/lib/supabase/account";
 
 type Tur = "teslimat" | "gelal";
 
@@ -55,12 +58,43 @@ type SuccessResult = {
 
 export default function CheckoutPage() {
   const cart = useCart();
+  const { user } = useAuthUser();
   const [hydrated, setHydrated] = useState(false);
   useEffect(() => setHydrated(true), []);
 
   const [tur, setTur] = useState<Tur>("teslimat");
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
   const [almaSaati, setAlmaSaati] = useState<string>("");
+
+  const [addresses, setAddresses] = useState<CustomerAddress[]>([]);
+  const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
+  const [saveAddress, setSaveAddress] = useState(true);
+
+  useEffect(() => {
+    if (!user) {
+      setAddresses([]);
+      return;
+    }
+    setForm((f) => ({
+      ...f,
+      isim: f.isim || (user.user_metadata?.isim as string) || "",
+      telefon: f.telefon || (user.user_metadata?.telefon as string) || "",
+      eposta: user.email ?? f.eposta,
+    }));
+    getMyAddresses().then(setAddresses);
+  }, [user]);
+
+  function selectAddress(a: CustomerAddress) {
+    setSelectedAddressId(a.id);
+    setForm((f) => ({
+      ...f,
+      sokak: a.sokak,
+      numara: a.numara,
+      posta_kodu: a.posta_kodu,
+      sehir: a.sehir,
+      kapi_kat_notu: a.kapi_kat_notu ?? "",
+    }));
+  }
 
   const [hours, setHours] = useState<OpeningHour[] | null>(null);
   const [hoursLoading, setHoursLoading] = useState(true);
@@ -111,8 +145,17 @@ export default function CheckoutPage() {
     [hours, now]
   );
 
+  const ADDRESS_FIELDS = new Set([
+    "sokak",
+    "numara",
+    "posta_kodu",
+    "sehir",
+    "kapi_kat_notu",
+  ]);
+
   function updateField<K extends keyof FormState>(key: K, value: FormState[K]) {
     setForm((f) => ({ ...f, [key]: value }));
+    if (ADDRESS_FIELDS.has(key)) setSelectedAddressId(null);
   }
 
   function validate(): Record<string, string> {
@@ -149,9 +192,15 @@ export default function CheckoutPage() {
     setSubmitError(null);
 
     try {
+      const headers: Record<string, string> = { "Content-Type": "application/json" };
+      if (user) {
+        const { data } = await supabaseBrowser.auth.getSession();
+        if (data.session) headers.Authorization = `Bearer ${data.session.access_token}`;
+      }
+
       const res = await fetch("/api/orders", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify({
           tur,
           musteri: { isim: form.isim, telefon: form.telefon, eposta: form.eposta },
@@ -177,6 +226,17 @@ export default function CheckoutPage() {
       }
       setSuccess({ ...data, paid: data.tur === "gelal" });
       cart.clear();
+
+      if (user && tur === "teslimat" && !selectedAddressId && saveAddress) {
+        addMyAddress({
+          etiket: "Zuhause",
+          sokak: form.sokak,
+          numara: form.numara,
+          posta_kodu: form.posta_kodu,
+          sehir: form.sehir,
+          kapi_kat_notu: form.kapi_kat_notu,
+        }).catch(() => {});
+      }
     } catch {
       setSubmitError("Netzwerkfehler. Bitte erneut versuchen.");
     } finally {
@@ -320,6 +380,15 @@ export default function CheckoutPage() {
         </button>
       </div>
 
+      {!user && (
+        <p className="mb-4 text-sm text-neutral-500">
+          <Link href="/konto/anmelden" className="font-semibold text-orange-600">
+            Anmelden
+          </Link>{" "}
+          für schnelleres Bestellen beim nächsten Mal.
+        </p>
+      )}
+
       <form onSubmit={handleSubmit} className="space-y-5">
         <div className="space-y-3">
           <FormField label="Name" htmlFor="isim" error={errors.isim}>
@@ -346,21 +415,61 @@ export default function CheckoutPage() {
                 value={form.eposta}
                 onChange={(e) => updateField("eposta", e.target.value)}
                 inputMode="email"
-                className={errors.eposta ? inputErrorClass : inputClass}
+                readOnly={!!user}
+                className={`${errors.eposta ? inputErrorClass : inputClass} ${
+                  user ? "bg-neutral-50 text-neutral-500" : ""
+                }`}
               />
             </FormField>
           </div>
         </div>
 
         {tur === "teslimat" ? (
-          <DeliveryFields
-            values={form}
-            errors={errors}
-            onChange={updateField}
-            zone={zone}
-            zoneLoading={zoneLoading}
-            cartTotal={cart.total}
-          />
+          <div className="space-y-3">
+            {user && addresses.length > 0 && (
+              <div>
+                <p className="mb-2 text-sm font-medium text-neutral-700">
+                  Gespeicherte Adresse
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {addresses.map((a) => (
+                    <button
+                      key={a.id}
+                      type="button"
+                      onClick={() => selectAddress(a)}
+                      className={`rounded-full px-4 py-2 text-sm font-medium ${
+                        selectedAddressId === a.id
+                          ? "bg-orange-500 text-white"
+                          : "bg-neutral-100 text-neutral-700"
+                      }`}
+                    >
+                      {a.etiket}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <DeliveryFields
+              values={form}
+              errors={errors}
+              onChange={updateField}
+              zone={zone}
+              zoneLoading={zoneLoading}
+              cartTotal={cart.total}
+            />
+
+            {user && !selectedAddressId && (
+              <label className="flex items-center gap-2 text-sm text-neutral-600">
+                <input
+                  type="checkbox"
+                  checked={saveAddress}
+                  onChange={(e) => setSaveAddress(e.target.checked)}
+                />
+                Adresse für künftige Bestellungen speichern
+              </label>
+            )}
+          </div>
         ) : (
           <PickupFields
             slots={pickupSlots}

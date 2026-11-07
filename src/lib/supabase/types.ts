@@ -23,3 +23,24 @@ export type OpeningHour = {
   kapanis: string; // "HH:MM:SS"
   kapali: boolean;
 };
+
+export type CustomerAddress = {
+  id: string;
+  musteri_id: string;
+  etiket: string;
+  sokak: string;
+  numara: string;
+  posta_kodu: string;
+  sehir: string;
+  kapi_kat_notu: string | null;
+};
+
+export type CustomerOrder = {
+  id: string;
+  siparis_no: string;
+  tur: "teslimat" | "gelal";
+  odeme_durumu: "bekliyor" | "odendi" | "basarisiz";
+  siparis_durumu: string;
+  toplam: number;
+  created_at: string;
+};

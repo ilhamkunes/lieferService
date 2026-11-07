@@ -50,6 +50,16 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Warenkorb ist leer." }, { status: 400 });
   }
 
+  // Giris yapmis musteriyi dogrula (varsa). Token sadece sunucuda
+  // dogrulanir - istemciden gelen bir musteriId asla dogrudan guvenilmez.
+  let musteriId: string | null = null;
+  const authHeader = request.headers.get("authorization");
+  if (authHeader?.startsWith("Bearer ")) {
+    const token = authHeader.slice("Bearer ".length);
+    const { data: userData } = await supabaseAdmin.auth.getUser(token);
+    musteriId = userData.user?.id ?? null;
+  }
+
   const { data: hoursData, error: hoursErr } = await supabaseAdmin
     .from("opening_hours")
     .select("gun, acilis, kapanis, kapali");
@@ -198,6 +208,7 @@ export async function POST(request: Request) {
       musteri_adi: musteri.isim.trim(),
       telefon: musteri.telefon.trim(),
       eposta: musteri.eposta.trim(),
+      musteri_id: musteriId,
       tur: body.tur,
       ara_toplam: araToplam,
       teslimat_ucreti: teslimatUcreti,
