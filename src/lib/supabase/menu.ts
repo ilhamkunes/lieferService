@@ -14,7 +14,7 @@ export async function getProducts(): Promise<Product[]> {
   const { data, error } = await supabaseBrowser
     .from("products")
     .select(
-      "id, kategori_id, isim, aciklama, fiyat, fotograf_url, alerjenler, katki_maddeleri, mevcut_mu, sira"
+      "id, kategori_id, isim, aciklama, fiyat, fotograf_url, alerjenler, katki_maddeleri, mevcut_mu, sira, one_cikan"
     )
     .order("sira", { ascending: true });
   if (error) throw error;

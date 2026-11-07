@@ -29,6 +29,7 @@ export function ProductForm({
     kategori_id: product?.kategori_id ?? defaultKategoriId ?? categories[0]?.id ?? "",
     fotograf_url: product?.fotograf_url ?? "",
     alerjenler: product?.alerjenler ?? [],
+    one_cikan: product?.one_cikan ?? false,
   });
   const [allergeneText, setAllergeneText] = useState(
     (product?.alerjenler ?? []).join(", ")
@@ -137,6 +138,16 @@ export function ProductForm({
             onChange={(e) => setAllergeneText(e.target.value)}
             className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm"
           />
+          <label className="flex items-center gap-2 text-sm text-neutral-700">
+            <input
+              type="checkbox"
+              checked={form.one_cikan}
+              onChange={(e) =>
+                setForm((f) => ({ ...f, one_cikan: e.target.checked }))
+              }
+            />
+            Als &quot;Beliebt&quot; markieren
+          </label>
 
           {error && <p className="text-sm text-red-600">{error}</p>}
 

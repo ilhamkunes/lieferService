@@ -15,6 +15,7 @@ export type Product = {
   katki_maddeleri: string[];
   mevcut_mu: boolean;
   sira: number;
+  one_cikan: boolean;
 };
 
 export type OpeningHour = {
@@ -91,6 +92,8 @@ export type RestaurantSettings = {
   gelal_durduruldu: boolean;
   hazirlik_dakika: number;
   teslimat_dakika: number;
+  kapak_foto_url: string | null;
+  logo_url: string | null;
 };
 
 export type DeliveryZoneAdmin = {

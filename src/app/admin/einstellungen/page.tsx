@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useAdminSettings } from "@/lib/admin/settings-context";
 import { updateSettings } from "@/lib/admin/settings";
 import type { RestaurantSettings } from "@/lib/supabase/types";
@@ -68,6 +69,50 @@ function MinuteStepper({
   );
 }
 
+function BrandingEditor({
+  settings,
+  onSaved,
+}: {
+  settings: RestaurantSettings;
+  onSaved: () => void;
+}) {
+  const [kapak, setKapak] = useState(settings.kapak_foto_url ?? "");
+  const [logo, setLogo] = useState(settings.logo_url ?? "");
+
+  useEffect(() => {
+    setKapak(settings.kapak_foto_url ?? "");
+    setLogo(settings.logo_url ?? "");
+  }, [settings.kapak_foto_url, settings.logo_url]);
+
+  async function save() {
+    await updateSettings({
+      kapak_foto_url: kapak.trim() || null,
+      logo_url: logo.trim() || null,
+    });
+    onSaved();
+  }
+
+  return (
+    <section className="mb-6 space-y-2">
+      <h2 className="mb-2 font-semibold text-neutral-900">Design</h2>
+      <input
+        placeholder="Kapak-Foto-URL"
+        value={kapak}
+        onChange={(e) => setKapak(e.target.value)}
+        onBlur={save}
+        className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm"
+      />
+      <input
+        placeholder="Logo-URL"
+        value={logo}
+        onChange={(e) => setLogo(e.target.value)}
+        onBlur={save}
+        className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm"
+      />
+    </section>
+  );
+}
+
 export default function EinstellungenPage() {
   const { settings, refresh } = useAdminSettings();
 
@@ -82,6 +127,8 @@ export default function EinstellungenPage() {
 
   return (
     <main className="px-4 py-4">
+      <BrandingEditor settings={settings} onSaved={refresh} />
+
       <section className="mb-6 space-y-2">
         <StatusRow
           label="Restaurant"

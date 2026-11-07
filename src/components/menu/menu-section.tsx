@@ -6,6 +6,7 @@ import {
 import { getRestaurantSettings } from "@/lib/supabase/settings";
 import { getAvailability } from "@/lib/availability";
 import { MenuClient, type GroupedCategory } from "@/components/menu/menu-client";
+import { RestaurantHeader } from "@/components/menu/restaurant-header";
 
 export async function MenuSection() {
   const [categories, products, openingHours, settings] = await Promise.all([
@@ -22,8 +23,15 @@ export async function MenuSection() {
     products: products.filter((p) => p.kategori_id === category.id),
   }));
 
+  const featured = products.filter((p) => p.one_cikan && p.mevcut_mu);
+
   return (
     <div>
+      <RestaurantHeader
+        kapakFotoUrl={settings.kapak_foto_url}
+        logoUrl={settings.logo_url}
+      />
+
       {status.isOpen ? (
         <div className="bg-green-50 px-4 py-2 text-center text-sm font-medium text-green-700">
           Geöffnet – wir nehmen jetzt Bestellungen an
@@ -35,18 +43,18 @@ export async function MenuSection() {
         </div>
       )}
 
-      <MenuClient grouped={grouped} />
+      <MenuClient grouped={grouped} featured={featured} />
     </div>
   );
 }
 
 export function MenuSectionSkeleton() {
   return (
-    <div className="animate-pulse px-4 py-4">
-      <div className="mb-4 h-8 w-full rounded bg-neutral-100" />
-      <div className="space-y-3">
+    <div className="animate-pulse">
+      <div className="h-36 w-full bg-neutral-100" />
+      <div className="space-y-3 px-4 py-4">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="h-24 rounded-xl bg-neutral-100" />
+          <div key={i} className="h-16 rounded-lg bg-neutral-100" />
         ))}
       </div>
     </div>

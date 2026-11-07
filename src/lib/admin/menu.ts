@@ -37,6 +37,7 @@ export type ProductInput = {
   kategori_id: string;
   fotograf_url: string;
   alerjenler: string[];
+  one_cikan: boolean;
 };
 
 function productPayload(input: ProductInput) {
@@ -47,6 +48,7 @@ function productPayload(input: ProductInput) {
     kategori_id: input.kategori_id,
     fotograf_url: input.fotograf_url.trim() || null,
     alerjenler: input.alerjenler,
+    one_cikan: input.one_cikan,
   };
 }
 
