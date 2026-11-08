@@ -90,7 +90,7 @@ function LoginForm() {
     setError(null);
     setInfo(null);
     const { error } = await supabaseBrowser.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/konto`,
+      redirectTo: `${window.location.origin}/konto/neues-passwort`,
     });
     if (error) {
       setError("Link konnte nicht gesendet werden.");
