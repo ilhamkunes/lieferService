@@ -1,5 +1,5 @@
 // Tek yerden ayar: restoran adini degistirmek icin sadece burayi duzenle.
-export const RESTAURANT_NAME = "Mein Restaurant";
+export const RESTAURANT_NAME = "Bugday";
 
 export const CURRENCY = "EUR";
 export const LOCALE = "de-DE";
