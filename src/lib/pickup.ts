@@ -1,15 +1,18 @@
 import type { OpeningHour } from "@/lib/supabase/types";
+import { berlinWallTimeToDate, getBerlinParts } from "@/lib/timezone";
 
 // Mutfagin siparisi hazirlamaya baslamasi icin gereken minimum sure.
 // Prompt 5'te admin panelinden ayarlanabilir hale gelecek, simdilik sabit.
 export const MIN_PREP_MINUTES = 15;
 const SLOT_STEP_MINUTES = 15;
 
-function atTime(base: Date, hhmmss: string): Date {
-  const [h, m, s] = hhmmss.split(":").map(Number);
-  const d = new Date(base);
-  d.setHours(h, m, s || 0, 0);
-  return d;
+// hhmmss ("HH:MM:SS"), base'in Berlin takvim gunune (yil/ay/gun) denk
+// gelen gercek ani (UTC Date) olarak dondurulur - calistigi ortamin
+// (tarayici/Vercel sunucusu) yerel saatinden bagimsiz.
+function atBerlinTime(base: Date, hhmmss: string): Date {
+  const { year, month, day } = getBerlinParts(base);
+  const [h, m] = hhmmss.split(":").map(Number);
+  return berlinWallTimeToDate(year, month, day, h, m);
 }
 
 function roundUpToStep(date: Date, stepMinutes: number): Date {
@@ -18,11 +21,11 @@ function roundUpToStep(date: Date, stepMinutes: number): Date {
 }
 
 export function getPickupSlotsForToday(hours: OpeningHour[], now: Date): Date[] {
-  const today = hours.find((h) => h.gun === now.getDay());
+  const today = hours.find((h) => h.gun === getBerlinParts(now).weekday);
   if (!today || today.kapali) return [];
 
-  const acilis = atTime(now, today.acilis);
-  const kapanis = atTime(now, today.kapanis);
+  const acilis = atBerlinTime(now, today.acilis);
+  const kapanis = atBerlinTime(now, today.kapanis);
   const earliest = roundUpToStep(
     new Date(
       Math.max(now.getTime() + MIN_PREP_MINUTES * 60 * 1000, acilis.getTime())
@@ -47,13 +50,22 @@ export function isValidPickupTime(
   now: Date
 ): boolean {
   if (Number.isNaN(candidate.getTime())) return false;
-  if (candidate.toDateString() !== now.toDateString()) return false;
 
-  const today = hours.find((h) => h.gun === candidate.getDay());
+  const candidateBerlin = getBerlinParts(candidate);
+  const nowBerlin = getBerlinParts(now);
+  if (
+    candidateBerlin.year !== nowBerlin.year ||
+    candidateBerlin.month !== nowBerlin.month ||
+    candidateBerlin.day !== nowBerlin.day
+  ) {
+    return false;
+  }
+
+  const today = hours.find((h) => h.gun === candidateBerlin.weekday);
   if (!today || today.kapali) return false;
 
-  const acilis = atTime(candidate, today.acilis);
-  const kapanis = atTime(candidate, today.kapanis);
+  const acilis = atBerlinTime(candidate, today.acilis);
+  const kapanis = atBerlinTime(candidate, today.kapanis);
   const earliest = new Date(now.getTime() + MIN_PREP_MINUTES * 60 * 1000);
 
   if (candidate < acilis || candidate >= kapanis) return false;

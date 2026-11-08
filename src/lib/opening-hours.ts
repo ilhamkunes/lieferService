@@ -1,4 +1,5 @@
 import type { OpeningHour } from "@/lib/supabase/types";
+import { getBerlinParts } from "@/lib/timezone";
 
 const GUN_ADI_DE = [
   "Sonntag",
@@ -10,11 +11,9 @@ const GUN_ADI_DE = [
   "Samstag",
 ] as const;
 
-function parseTimeOnDate(base: Date, hhmmss: string): Date {
-  const [h, m, s] = hhmmss.split(":").map(Number);
-  const d = new Date(base);
-  d.setHours(h, m, s || 0, 0);
-  return d;
+function toMinutes(hhmmss: string): number {
+  const [h, m] = hhmmss.split(":").map(Number);
+  return h * 60 + m;
 }
 
 function formatTime(hhmmss: string): string {
@@ -26,16 +25,21 @@ export type OpenStatus =
   | { isOpen: true }
   | { isOpen: false; nextOpenLabel: string | null };
 
+// now, calistigi ortamin (tarayici veya Vercel sunucusu - UTC) yerel
+// saatinden BAGIMSIZ olarak hep Europe/Berlin saatine gore degerlendirilir.
 export function getOpenStatus(hours: OpeningHour[], now: Date): OpenStatus {
-  const today = hours.find((h) => h.gun === now.getDay());
+  const berlin = getBerlinParts(now);
+  const nowMinutes = berlin.hours * 60 + berlin.minutes;
+
+  const today = hours.find((h) => h.gun === berlin.weekday);
 
   if (today && !today.kapali) {
-    const acilis = parseTimeOnDate(now, today.acilis);
-    const kapanis = parseTimeOnDate(now, today.kapanis);
-    if (now >= acilis && now < kapanis) {
+    const acilisMin = toMinutes(today.acilis);
+    const kapanisMin = toMinutes(today.kapanis);
+    if (nowMinutes >= acilisMin && nowMinutes < kapanisMin) {
       return { isOpen: true };
     }
-    if (now < acilis) {
+    if (nowMinutes < acilisMin) {
       return {
         isOpen: false,
         nextOpenLabel: `Heute ${formatTime(today.acilis)} Uhr`,
@@ -45,7 +49,7 @@ export function getOpenStatus(hours: OpeningHour[], now: Date): OpenStatus {
 
   // Bugun kapali/gecmis - sonraki 7 gun icinde ilk acik gunu bul
   for (let offset = 1; offset <= 7; offset++) {
-    const gun = (now.getDay() + offset) % 7;
+    const gun = (berlin.weekday + offset) % 7;
     const hit = hours.find((h) => h.gun === gun && !h.kapali);
     if (hit) {
       const label =
