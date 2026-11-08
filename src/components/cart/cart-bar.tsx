@@ -16,7 +16,7 @@ export function CartBar() {
 
   return (
     <>
-      <div className="fixed inset-x-0 bottom-0 z-20 px-4 pb-4">
+      <div className="fixed inset-x-0 bottom-0 z-20 mx-auto max-w-xl px-4 pb-4">
         <button
           type="button"
           onClick={() => setOpen(true)}

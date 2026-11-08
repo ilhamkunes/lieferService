@@ -17,7 +17,7 @@ export function CartSheet({ onClose }: { onClose: () => void }) {
         className="absolute inset-0 bg-black/40"
       />
 
-      <div className="relative z-10 flex max-h-[85vh] flex-col rounded-t-2xl bg-white">
+      <div className="relative z-10 mx-auto flex max-h-[85vh] w-full max-w-xl flex-col rounded-t-2xl bg-white">
         <div className="flex items-center justify-between border-b border-neutral-200 px-4 py-3">
           <h2 className="text-base font-semibold text-neutral-900">
             Warenkorb
