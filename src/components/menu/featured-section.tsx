@@ -3,6 +3,7 @@
 import { formatPrice } from "@/lib/config";
 import { useCart } from "@/lib/cart/cart-context";
 import type { Product } from "@/lib/supabase/types";
+import { FoodPlaceholderIcon } from "@/components/ui/food-placeholder-icon";
 
 export function FeaturedSection({ products }: { products: Product[] }) {
   const { addItem } = useCart();
@@ -14,7 +15,7 @@ export function FeaturedSection({ products }: { products: Product[] }) {
       <div className="flex gap-3 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
         {products.map((p) => (
           <div key={p.id} className="relative w-28 shrink-0">
-            <div className="h-28 w-28 overflow-hidden rounded-lg bg-blue-50">
+            <div className="h-28 w-28 overflow-hidden rounded-lg bg-orange-50">
               {p.fotograf_url ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
@@ -23,8 +24,8 @@ export function FeaturedSection({ products }: { products: Product[] }) {
                   className="h-full w-full object-cover"
                 />
               ) : (
-                <div className="flex h-full w-full items-center justify-center text-lg font-semibold text-blue-200">
-                  {p.isim.charAt(0).toUpperCase()}
+                <div className="flex h-full w-full items-center justify-center">
+                  <FoodPlaceholderIcon className="h-10 w-10 text-orange-200" />
                 </div>
               )}
               {p.mevcut_mu && (

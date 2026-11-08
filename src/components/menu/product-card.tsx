@@ -3,6 +3,7 @@
 import { formatPrice } from "@/lib/config";
 import { useCart } from "@/lib/cart/cart-context";
 import type { Product } from "@/lib/supabase/types";
+import { FoodPlaceholderIcon } from "@/components/ui/food-placeholder-icon";
 
 export function ProductCard({ product }: { product: Product }) {
   const { addItem } = useCart();
@@ -32,7 +33,7 @@ export function ProductCard({ product }: { product: Product }) {
       </div>
 
       <div className="relative shrink-0">
-        <div className="h-16 w-16 overflow-hidden rounded-lg bg-blue-50">
+        <div className="h-16 w-16 overflow-hidden rounded-lg bg-orange-50">
           {product.fotograf_url ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -41,8 +42,8 @@ export function ProductCard({ product }: { product: Product }) {
               className="h-full w-full object-cover"
             />
           ) : (
-            <div className="flex h-full w-full items-center justify-center text-sm font-semibold text-blue-200">
-              {product.isim.charAt(0).toUpperCase()}
+            <div className="flex h-full w-full items-center justify-center">
+              <FoodPlaceholderIcon className="h-7 w-7 text-orange-200" />
             </div>
           )}
         </div>
