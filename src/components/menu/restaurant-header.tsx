@@ -31,12 +31,12 @@ export function RestaurantHeader({
       </div>
 
       <div className="-mt-8 flex items-end gap-3 px-4">
-        <div className="h-16 w-16 shrink-0 overflow-hidden rounded-xl border-4 border-white bg-orange-50 shadow-sm">
+        <div className="h-16 w-16 shrink-0 overflow-hidden rounded-xl border-4 border-white bg-orange-100 shadow-md">
           {logoUrl ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={logoUrl} alt="" className="h-full w-full object-cover" />
           ) : (
-            <div className="flex h-full w-full items-center justify-center text-lg font-bold text-orange-300">
+            <div className="flex h-full w-full items-center justify-center text-lg font-bold text-orange-600">
               {RESTAURANT_NAME.charAt(0).toUpperCase()}
             </div>
           )}
