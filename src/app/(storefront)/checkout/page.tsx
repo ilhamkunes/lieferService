@@ -28,6 +28,7 @@ import { FormField, inputClass, inputErrorClass } from "@/components/checkout/fo
 import { DeliveryFields } from "@/components/checkout/delivery-fields";
 import { PickupFields } from "@/components/checkout/pickup-fields";
 import { PaypalButton } from "@/components/checkout/paypal-button";
+import { OrderStatusLive } from "@/components/checkout/order-status-live";
 import { useAuthUser } from "@/lib/auth/use-auth-user";
 import { supabaseBrowser } from "@/lib/supabase/client";
 import { addMyAddress, getMyAddresses } from "@/lib/supabase/account";
@@ -148,6 +149,14 @@ export default function CheckoutPage() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [success, setSuccess] = useState<SuccessResult | null>(null);
+
+  // Next.js'in client-router cache'i bu sayfa instance'ini canli tutabiliyor;
+  // kullanici basarili siparisten sonra menuye donup yeni urun eklerse (sayfa
+  // yenilenmeden), eski success ekraninda takili kalmasin diye sifirla.
+  useEffect(() => {
+    if (success && cart.itemCount > 0) setSuccess(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cart.itemCount]);
 
   const pickupSlots = useMemo(
     () => (hours && now ? getPickupSlotsForToday(hours, now) : []),
@@ -306,6 +315,8 @@ export default function CheckoutPage() {
               Eine Bestellbestätigung wurde per E-Mail gesendet.
             </p>
           )}
+
+          {success.paid && <OrderStatusLive orderId={success.id} />}
 
           {success.tur === "teslimat" && !success.paid && (
             <div className="mt-4 rounded-lg bg-white p-4">
