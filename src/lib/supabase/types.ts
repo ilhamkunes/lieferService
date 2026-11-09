@@ -41,7 +41,10 @@ export type CustomerOrder = {
   siparis_no: string;
   tur: "teslimat" | "gelal";
   odeme_durumu: "bekliyor" | "odendi" | "basarisiz";
+  odeme_yontemi: string;
   siparis_durumu: string;
+  ara_toplam: number;
+  teslimat_ucreti: number;
   toplam: number;
   created_at: string;
 };
