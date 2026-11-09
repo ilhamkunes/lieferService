@@ -6,6 +6,7 @@ import { updateSettings } from "@/lib/admin/settings";
 import type { RestaurantSettings } from "@/lib/supabase/types";
 import { OpeningHoursEditor } from "@/components/admin/opening-hours-editor";
 import { DeliveryZonesEditor } from "@/components/admin/delivery-zones-editor";
+import { ImageUpload } from "@/components/admin/image-upload";
 
 function StatusRow({
   label,
@@ -76,38 +77,30 @@ function BrandingEditor({
   settings: RestaurantSettings;
   onSaved: () => void;
 }) {
-  const [kapak, setKapak] = useState(settings.kapak_foto_url ?? "");
-  const [logo, setLogo] = useState(settings.logo_url ?? "");
+  async function saveKapak(url: string) {
+    await updateSettings({ kapak_foto_url: url });
+    onSaved();
+  }
 
-  useEffect(() => {
-    setKapak(settings.kapak_foto_url ?? "");
-    setLogo(settings.logo_url ?? "");
-  }, [settings.kapak_foto_url, settings.logo_url]);
-
-  async function save() {
-    await updateSettings({
-      kapak_foto_url: kapak.trim() || null,
-      logo_url: logo.trim() || null,
-    });
+  async function saveLogo(url: string) {
+    await updateSettings({ logo_url: url });
     onSaved();
   }
 
   return (
-    <section className="mb-6 space-y-2">
+    <section className="mb-6 space-y-4">
       <h2 className="mb-2 font-semibold text-neutral-900">Design</h2>
-      <input
-        placeholder="Kapak-Foto-URL"
-        value={kapak}
-        onChange={(e) => setKapak(e.target.value)}
-        onBlur={save}
-        className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm"
+      <ImageUpload
+        label="Kapak-Foto"
+        value={settings.kapak_foto_url ?? ""}
+        onChange={saveKapak}
+        pathPrefix="branding/kapak"
       />
-      <input
-        placeholder="Logo-URL"
-        value={logo}
-        onChange={(e) => setLogo(e.target.value)}
-        onBlur={save}
-        className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm"
+      <ImageUpload
+        label="Logo"
+        value={settings.logo_url ?? ""}
+        onChange={saveLogo}
+        pathPrefix="branding/logo"
       />
     </section>
   );

@@ -8,6 +8,7 @@ import {
   type ProductInput,
 } from "@/lib/admin/menu";
 import type { Category, Product } from "@/lib/supabase/types";
+import { ImageUpload } from "@/components/admin/image-upload";
 
 export function ProductForm({
   categories,
@@ -124,13 +125,11 @@ export function ProductForm({
               ))}
             </select>
           </div>
-          <input
-            placeholder="Foto-URL (optional)"
+          <ImageUpload
+            label="Foto"
             value={form.fotograf_url}
-            onChange={(e) =>
-              setForm((f) => ({ ...f, fotograf_url: e.target.value }))
-            }
-            className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm"
+            onChange={(url) => setForm((f) => ({ ...f, fotograf_url: url }))}
+            pathPrefix={`products/${product?.id ?? "neu"}`}
           />
           <input
             placeholder="Allergene, mit Komma getrennt"
