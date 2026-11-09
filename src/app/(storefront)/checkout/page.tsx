@@ -261,7 +261,10 @@ export default function CheckoutPage() {
         return;
       }
       setSuccess({ ...data, paid: data.tur === "gelal" });
-      cart.clear();
+      // Teslimat siparislerinde sepet, PayPal odemesi basarili olunca temizlenir
+      // (asagidaki onPaid), boylece musteri odemeden once vazgecip "Abbrechen"
+      // derse sepeti hala doluyken forma geri doner.
+      if (data.tur === "gelal") cart.clear();
 
       if (user && tur === "teslimat" && !selectedAddressId && saveAddress) {
         addMyAddress({
@@ -282,26 +285,26 @@ export default function CheckoutPage() {
 
   if (success) {
     return (
-      <main className="flex-1 px-4 py-8">
+      <main className="flex-1 px-5 py-8">
         <div
-          className={`mx-auto max-w-md rounded-xl border p-6 text-center ${
+          className={`mx-auto max-w-md rounded-3xl border p-7 text-center ${
             success.paid
-              ? "border-green-200 bg-green-50"
-              : "border-orange-200 bg-orange-50"
+              ? "border-emerald-200 bg-emerald-50"
+              : "border-border-warm bg-white shadow-[0_10px_30px_rgba(36,28,22,0.08)]"
           }`}
         >
           <h1
-            className={`text-xl font-semibold ${
-              success.paid ? "text-green-800" : "text-orange-800"
+            className={`font-display text-xl font-semibold ${
+              success.paid ? "text-emerald-800" : "text-charcoal"
             }`}
           >
             {success.paid ? "Bestellung erhalten" : "Fast geschafft"}
           </h1>
-          <p className={`mt-2 ${success.paid ? "text-green-700" : "text-orange-700"}`}>
+          <p className={`mt-2 ${success.paid ? "text-emerald-700" : "text-muted"}`}>
             Bestellnummer: <strong>#{success.siparisNo}</strong>
           </p>
           {success.tur === "gelal" && success.almaSaati && (
-            <p className="mt-1 text-green-700">
+            <p className="mt-1 text-emerald-700">
               Abholzeit:{" "}
               {new Date(success.almaSaati).toLocaleTimeString("de-DE", {
                 hour: "2-digit",
@@ -311,12 +314,12 @@ export default function CheckoutPage() {
             </p>
           )}
           <p
-            className={`mt-1 ${success.paid ? "text-green-700" : "text-orange-700"}`}
+            className={`mt-1 font-semibold ${success.paid ? "text-emerald-700" : "text-charcoal"}`}
           >
             Gesamt: {formatPrice(success.toplam)}
           </p>
           {success.paid && (
-            <p className="mt-1 text-sm text-green-700">
+            <p className="mt-1 text-sm text-emerald-700">
               Eine Bestellbestätigung wurde per E-Mail gesendet.
             </p>
           )}
@@ -324,21 +327,33 @@ export default function CheckoutPage() {
           {success.paid && <OrderStatusLive orderId={success.id} />}
 
           {success.tur === "teslimat" && !success.paid && (
-            <div className="mt-4 rounded-lg bg-white p-4">
-              <p className="mb-3 text-sm font-medium text-neutral-700">
-                Bitte jetzt mit PayPal bezahlen:
-              </p>
-              <PaypalButton
-                orderId={success.id}
-                onPaid={() => setSuccess((s) => (s ? { ...s, paid: true } : s))}
-              />
-            </div>
+            <>
+              <div className="mt-5 rounded-2xl bg-cream p-4">
+                <p className="mb-3 text-sm font-medium text-charcoal">
+                  Bitte jetzt mit PayPal bezahlen:
+                </p>
+                <PaypalButton
+                  orderId={success.id}
+                  onPaid={() => {
+                    cart.clear();
+                    setSuccess((s) => (s ? { ...s, paid: true } : s));
+                  }}
+                />
+              </div>
+              <button
+                type="button"
+                onClick={() => setSuccess(null)}
+                className="mt-4 text-sm font-semibold text-muted underline"
+              >
+                Abbrechen und Bestellung ändern
+              </button>
+            </>
           )}
 
           {success.paid && (
             <Link
               href="/speisekarte"
-              className="mt-4 inline-block rounded-full bg-terracotta px-5 py-2 text-sm font-semibold text-white"
+              className="mt-5 inline-block rounded-full bg-terracotta px-5 py-2 text-sm font-semibold text-cream"
             >
               Zurück zur Speisekarte
             </Link>

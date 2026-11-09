@@ -69,7 +69,7 @@ export function PaypalButton({
         setReady(true);
         window.paypal
           .Buttons({
-            style: { layout: "vertical", color: "gold", label: "paypal" },
+            style: { layout: "vertical", color: "gold", label: "paypal", shape: "pill" },
             createOrder: async () => {
               const res = await fetch("/api/paypal/create-order", {
                 method: "POST",
