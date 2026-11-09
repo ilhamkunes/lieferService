@@ -1,8 +1,6 @@
 const RESEND_API_URL = "https://api.resend.com/emails";
 
-// Domain dogrulanana kadar Resend sadece bu gonderici adresine ve sadece
-// hesap sahibinin kendi dogrulanmis e-postasina gonderime izin verir.
-const FROM_ADDRESS = "Bestellungen <onboarding@resend.dev>";
+const FROM_ADDRESS = "Bugday <bestellungen@bugday.eu>";
 
 export async function sendEmail(opts: {
   to: string;
