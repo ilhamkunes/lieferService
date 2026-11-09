@@ -285,7 +285,7 @@ export default function CheckoutPage() {
 
   if (success) {
     return (
-      <main className="flex-1 px-5 py-8">
+      <main className="flex-1 px-5 py-8 md:mx-auto md:max-w-xl">
         <div
           className={`mx-auto max-w-md rounded-3xl border p-7 text-center ${
             success.paid
@@ -365,7 +365,7 @@ export default function CheckoutPage() {
 
   if (!hydrated || hoursLoading || !now) {
     return (
-      <main className="flex-1 px-4 py-8">
+      <main className="flex-1 px-4 py-8 md:mx-auto md:max-w-xl">
         <div className="mx-auto max-w-md animate-pulse space-y-3">
           <div className="h-8 rounded bg-neutral-100" />
           <div className="h-32 rounded bg-neutral-100" />
@@ -376,7 +376,7 @@ export default function CheckoutPage() {
 
   if (cart.itemCount === 0) {
     return (
-      <main className="flex-1 px-4 py-8 text-center">
+      <main className="flex-1 px-4 py-8 text-center md:mx-auto md:max-w-xl">
         <p className="text-neutral-600">Dein Warenkorb ist leer.</p>
         <Link
           href="/speisekarte"
@@ -394,7 +394,7 @@ export default function CheckoutPage() {
       (!availability.deliveryAvailable && !availability.pickupAvailable))
   ) {
     return (
-      <main className="flex-1 px-4 py-8 text-center">
+      <main className="flex-1 px-4 py-8 text-center md:mx-auto md:max-w-xl">
         <p className="font-medium text-red-700">
           Wir sind aktuell geschlossen und nehmen keine Bestellungen an.
         </p>
@@ -414,7 +414,7 @@ export default function CheckoutPage() {
   }
 
   return (
-    <main className="flex-1 px-4 py-6 pb-32">
+    <main className="flex-1 px-4 py-6 pb-32 md:mx-auto md:max-w-xl">
       <h1 className="mb-4 text-lg font-semibold text-neutral-900">Bestellung</h1>
 
       <div className="mb-4 grid grid-cols-2 gap-2">

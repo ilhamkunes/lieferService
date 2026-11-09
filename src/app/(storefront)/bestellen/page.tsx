@@ -27,7 +27,7 @@ function BestellenSkeleton() {
 
 export default function BestellenPage() {
   return (
-    <main className="flex-1">
+    <main className="flex-1 md:mx-auto md:max-w-xl">
       <div className="flex items-center gap-3 px-5 py-4">
         <Link href="/" className="font-display text-sm font-semibold text-muted">
           ← {RESTAURANT_NAME}

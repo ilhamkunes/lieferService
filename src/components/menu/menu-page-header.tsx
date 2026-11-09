@@ -10,7 +10,7 @@ export function MenuPageHeader({
   status: Availability;
 }) {
   return (
-    <div className="flex items-center justify-between gap-3 px-5 py-3">
+    <div className="flex items-center justify-between gap-3 px-5 py-3 md:px-8 md:py-4">
       <Link href="/" className="flex items-center gap-2.5">
         <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-gold">
           {logoUrl ? (

@@ -82,17 +82,21 @@ export function MenuClient({
       />
 
       {searchResults ? (
-        <div className="px-5 py-2">
+        <div className="px-5 py-2 md:px-8">
           {searchResults.length === 0 ? (
             <p className="py-8 text-center text-sm text-muted">
               Keine Treffer für &quot;{search}&quot;.
             </p>
           ) : (
-            searchResults.map((p) => <ProductCard key={p.id} product={p} />)
+            <div className="md:grid md:grid-cols-2 md:gap-x-8 md:gap-y-8">
+              {searchResults.map((p) => (
+                <ProductCard key={p.id} product={p} />
+              ))}
+            </div>
           )}
         </div>
       ) : (
-        <div className="px-5 py-2">
+        <div className="px-5 py-2 md:px-8">
           {grouped.map((g) => (
             <section
               key={g.category.id}
@@ -101,9 +105,9 @@ export function MenuClient({
                 sectionRefs.current[g.category.id] = el;
               }}
               style={{ scrollMarginTop: 64 }}
-              className="py-4"
+              className="py-4 md:py-6"
             >
-              <h2 className="font-display mb-1 text-[19px] font-semibold text-charcoal">
+              <h2 className="font-display mb-1 text-[19px] font-semibold text-charcoal md:text-2xl">
                 {g.category.isim}
               </h2>
               {g.products.length === 0 ? (
@@ -112,13 +116,15 @@ export function MenuClient({
                 </p>
               ) : (
                 <>
-                  <p className="mb-3 text-[13px] text-muted">
+                  <p className="mb-3 text-[13px] text-muted md:mb-5">
                     {g.products.length}{" "}
                     {g.products.length === 1 ? "Artikel" : "Artikel"}
                   </p>
-                  {g.products.map((p) => (
-                    <ProductCard key={p.id} product={p} />
-                  ))}
+                  <div className="md:grid md:grid-cols-2 md:gap-x-8 md:gap-y-8">
+                    {g.products.map((p) => (
+                      <ProductCard key={p.id} product={p} />
+                    ))}
+                  </div>
                 </>
               )}
             </section>

@@ -32,7 +32,7 @@ export default function NewPasswordPage() {
 
   if (loading) {
     return (
-      <main className="flex-1 px-4 py-8">
+      <main className="flex-1 px-4 py-8 md:mx-auto md:max-w-xl">
         <p className="text-sm text-neutral-400">Wird geladen…</p>
       </main>
     );
@@ -40,7 +40,7 @@ export default function NewPasswordPage() {
 
   if (!user) {
     return (
-      <main className="flex-1 px-4 py-8 text-center">
+      <main className="flex-1 px-4 py-8 text-center md:mx-auto md:max-w-xl">
         <p className="text-neutral-700">
           Dieser Link ist abgelaufen oder ungültig. Bitte fordere einen neuen
           Link an.
@@ -56,7 +56,7 @@ export default function NewPasswordPage() {
   }
 
   return (
-    <main className="flex-1 px-4 py-8">
+    <main className="flex-1 px-4 py-8 md:mx-auto md:max-w-xl">
       <h1 className="mb-4 text-lg font-semibold text-neutral-900">
         Neues Passwort festlegen
       </h1>

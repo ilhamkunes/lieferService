@@ -8,7 +8,7 @@ export function OrderTypeBar() {
   if (!orderType) return null;
 
   return (
-    <div className="flex items-center justify-between gap-2 border-y border-border-warm bg-white px-5 py-2.5 text-sm">
+    <div className="flex items-center justify-between gap-2 border-y border-border-warm bg-white px-5 py-2.5 text-sm md:px-8">
       <span className="text-charcoal">
         {orderType === "gelal" ? "Abholung" : "Lieferung"}
       </span>

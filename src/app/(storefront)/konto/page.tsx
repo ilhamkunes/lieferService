@@ -26,14 +26,14 @@ export default function AccountPage() {
 
   if (loading || !user) {
     return (
-      <main className="flex-1 px-4 py-8">
+      <main className="flex-1 px-4 py-8 md:mx-auto md:max-w-xl">
         <p className="text-sm text-neutral-400">Wird geladen…</p>
       </main>
     );
   }
 
   return (
-    <main className="flex-1 px-4 py-6 pb-28">
+    <main className="flex-1 px-4 py-6 pb-28 md:mx-auto md:max-w-xl">
       <Link
         href="/speisekarte"
         className="mb-3 inline-block text-sm font-semibold text-terracotta"

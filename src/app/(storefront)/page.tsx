@@ -14,7 +14,7 @@ async function HomeContent() {
   const status = getAvailability(openingHours, settings, new Date());
 
   return (
-    <div>
+    <div className="md:mx-auto md:max-w-xl">
       <RestaurantHeader
         kapakFotoUrl={settings.kapak_foto_url}
         logoUrl={settings.logo_url}

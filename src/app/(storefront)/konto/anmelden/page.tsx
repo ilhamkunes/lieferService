@@ -100,7 +100,7 @@ function LoginForm() {
   }
 
   return (
-    <main className="flex-1 px-4 py-8">
+    <main className="flex-1 px-4 py-8 md:mx-auto md:max-w-xl">
       <h1 className="mb-4 text-lg font-semibold text-neutral-900">
         {mode === "login" ? "Anmelden" : "Konto erstellen"}
       </h1>

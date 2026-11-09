@@ -10,7 +10,7 @@ export function FeaturedSection({ products }: { products: Product[] }) {
   if (products.length === 0) return null;
 
   return (
-    <section className="px-5 pt-6 pb-2">
+    <section className="px-5 pt-6 pb-2 md:px-8">
       <h2 className="font-display mb-3.5 text-[19px] font-semibold text-charcoal">
         Beliebt diese Woche
       </h2>

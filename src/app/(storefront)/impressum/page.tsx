@@ -3,7 +3,7 @@ import { RESTAURANT_NAME } from "@/lib/config";
 
 export default function ImpressumPage() {
   return (
-    <main className="flex-1 px-5 py-6 pb-28">
+    <main className="flex-1 px-5 py-6 pb-28 md:mx-auto md:max-w-2xl">
       <Link href="/" className="mb-4 inline-block text-sm font-semibold text-terracotta">
         ← Zurück
       </Link>
