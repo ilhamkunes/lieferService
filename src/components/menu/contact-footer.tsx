@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { OpeningHour, RestaurantSettings } from "@/lib/supabase/types";
 import { GUN_ADI_DE, formatTime } from "@/lib/opening-hours";
 
@@ -138,6 +139,18 @@ export function ContactFooter({
           </dl>
         </div>
       )}
+
+      <div className="mt-5 flex flex-wrap gap-x-4 gap-y-1 border-t border-cream/15 pt-4.5 text-xs text-cream/60">
+        <Link href="/impressum" className="hover:text-cream/90">
+          Impressum
+        </Link>
+        <Link href="/datenschutz" className="hover:text-cream/90">
+          Datenschutz
+        </Link>
+        <Link href="/agb" className="hover:text-cream/90">
+          AGB
+        </Link>
+      </div>
     </section>
   );
 }

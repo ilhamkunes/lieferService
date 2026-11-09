@@ -555,6 +555,18 @@ export default function CheckoutPage() {
         >
           {submitting ? "Wird gesendet…" : "Jetzt bestellen"}
         </button>
+
+        <p className="text-center text-xs text-neutral-400">
+          Mit dem Absenden akzeptierst du unsere{" "}
+          <Link href="/agb" className="underline">
+            AGB
+          </Link>{" "}
+          und{" "}
+          <Link href="/datenschutz" className="underline">
+            Datenschutzerklärung
+          </Link>
+          .
+        </p>
       </form>
     </main>
   );
