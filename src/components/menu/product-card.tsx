@@ -22,7 +22,7 @@ export function ProductCard({ product }: { product: Product }) {
             <img
               src={product.fotograf_url}
               alt={product.isim}
-              className="h-full w-full object-cover"
+              className="h-full w-full object-cover md:object-contain"
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center">
