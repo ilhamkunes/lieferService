@@ -94,6 +94,9 @@ export type RestaurantSettings = {
   teslimat_dakika: number;
   kapak_foto_url: string | null;
   logo_url: string | null;
+  telefon: string | null;
+  adres: string | null;
+  instagram_url: string | null;
 };
 
 export type DeliveryZoneAdmin = {

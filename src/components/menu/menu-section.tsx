@@ -7,6 +7,7 @@ import { getRestaurantSettings } from "@/lib/supabase/settings";
 import { getAvailability } from "@/lib/availability";
 import { MenuClient, type GroupedCategory } from "@/components/menu/menu-client";
 import { RestaurantHeader } from "@/components/menu/restaurant-header";
+import { ContactFooter } from "@/components/menu/contact-footer";
 
 export async function MenuSection() {
   const [categories, products, openingHours, settings] = await Promise.all([
@@ -44,6 +45,8 @@ export async function MenuSection() {
       )}
 
       <MenuClient grouped={grouped} featured={featured} />
+
+      <ContactFooter settings={settings} openingHours={openingHours} />
     </div>
   );
 }

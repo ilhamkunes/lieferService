@@ -1,7 +1,7 @@
 import type { OpeningHour } from "@/lib/supabase/types";
 import { getBerlinParts } from "@/lib/timezone";
 
-const GUN_ADI_DE = [
+export const GUN_ADI_DE = [
   "Sonntag",
   "Montag",
   "Dienstag",
@@ -16,7 +16,7 @@ function toMinutes(hhmmss: string): number {
   return h * 60 + m;
 }
 
-function formatTime(hhmmss: string): string {
+export function formatTime(hhmmss: string): string {
   const [h, m] = hhmmss.split(":");
   return `${h}:${m}`;
 }

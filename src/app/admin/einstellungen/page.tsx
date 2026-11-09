@@ -113,6 +113,60 @@ function BrandingEditor({
   );
 }
 
+function ContactEditor({
+  settings,
+  onSaved,
+}: {
+  settings: RestaurantSettings;
+  onSaved: () => void;
+}) {
+  const [telefon, setTelefon] = useState(settings.telefon ?? "");
+  const [adres, setAdres] = useState(settings.adres ?? "");
+  const [instagram, setInstagram] = useState(settings.instagram_url ?? "");
+
+  useEffect(() => {
+    setTelefon(settings.telefon ?? "");
+    setAdres(settings.adres ?? "");
+    setInstagram(settings.instagram_url ?? "");
+  }, [settings.telefon, settings.adres, settings.instagram_url]);
+
+  async function save() {
+    await updateSettings({
+      telefon: telefon.trim() || null,
+      adres: adres.trim() || null,
+      instagram_url: instagram.trim() || null,
+    });
+    onSaved();
+  }
+
+  return (
+    <section className="mb-6 space-y-2">
+      <h2 className="mb-2 font-semibold text-neutral-900">Kontakt</h2>
+      <input
+        placeholder="Telefonnummer (z. B. +49 2151 1234567)"
+        value={telefon}
+        onChange={(e) => setTelefon(e.target.value)}
+        onBlur={save}
+        className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm"
+      />
+      <input
+        placeholder="Adresse (z. B. Königstraße 226, 47798 Krefeld)"
+        value={adres}
+        onChange={(e) => setAdres(e.target.value)}
+        onBlur={save}
+        className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm"
+      />
+      <input
+        placeholder="Instagram-Link (z. B. https://instagram.com/bugday.krefeld)"
+        value={instagram}
+        onChange={(e) => setInstagram(e.target.value)}
+        onBlur={save}
+        className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm"
+      />
+    </section>
+  );
+}
+
 export default function EinstellungenPage() {
   const { settings, refresh } = useAdminSettings();
 
@@ -128,6 +182,7 @@ export default function EinstellungenPage() {
   return (
     <main className="px-4 py-4">
       <BrandingEditor settings={settings} onSaved={refresh} />
+      <ContactEditor settings={settings} onSaved={refresh} />
 
       <section className="mb-6 space-y-2">
         <StatusRow
