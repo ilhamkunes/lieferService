@@ -20,7 +20,7 @@ export function FeaturedSection({ products }: { products: Product[] }) {
             key={p.id}
             className="w-[168px] shrink-0 md:w-auto md:rounded-2xl md:bg-white md:shadow-[0_4px_16px_rgba(36,28,22,0.08)]"
           >
-            <div className="relative h-[168px] w-[168px] overflow-hidden rounded-[18px] bg-orange-50 shadow-[0_8px_20px_rgba(36,28,22,0.12)] md:h-auto md:w-full md:aspect-square md:rounded-none md:shadow-none">
+            <div className="relative h-[168px] w-[168px] overflow-hidden rounded-[18px] bg-white shadow-[0_8px_20px_rgba(36,28,22,0.12)] md:h-auto md:w-full md:aspect-square md:rounded-none md:shadow-none">
               {p.fotograf_url ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img

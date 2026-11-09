@@ -16,7 +16,7 @@ export function ProductCard({ product }: { product: Product }) {
       }`}
     >
       <div className="relative order-2 shrink-0 md:order-1 md:w-full">
-        <div className="h-[76px] w-[76px] overflow-hidden rounded-2xl bg-orange-50 shadow-[0_4px_14px_rgba(36,28,22,0.12)] md:aspect-square md:h-auto md:w-full md:rounded-none md:shadow-none">
+        <div className="h-[76px] w-[76px] overflow-hidden rounded-2xl bg-white shadow-[0_4px_14px_rgba(36,28,22,0.12)] md:aspect-square md:h-auto md:w-full md:rounded-none md:shadow-none">
           {product.fotograf_url ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
