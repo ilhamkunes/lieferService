@@ -35,7 +35,7 @@ export default function AccountPage() {
   return (
     <main className="flex-1 px-4 py-6 pb-28">
       <Link
-        href="/"
+        href="/speisekarte"
         className="mb-3 inline-block text-sm font-semibold text-terracotta"
       >
         ← Zur Speisekarte

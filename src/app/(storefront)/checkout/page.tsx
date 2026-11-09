@@ -76,6 +76,11 @@ export default function CheckoutPage() {
   const [form, setForm] = useState<FormState>(EMPTY_FORM);
   const [almaSaati, setAlmaSaati] = useState<string>("");
 
+  // /bestellen sayfasinda secilen Abholung/Lieferung tercihini devral.
+  useEffect(() => {
+    if (cart.orderType) setTur(cart.orderType);
+  }, [cart.orderType]);
+
   const [addresses, setAddresses] = useState<CustomerAddress[]>([]);
   const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null);
   const [saveAddress, setSaveAddress] = useState(true);
@@ -332,7 +337,7 @@ export default function CheckoutPage() {
 
           {success.paid && (
             <Link
-              href="/"
+              href="/speisekarte"
               className="mt-4 inline-block rounded-full bg-terracotta px-5 py-2 text-sm font-semibold text-white"
             >
               Zurück zur Speisekarte
@@ -359,7 +364,7 @@ export default function CheckoutPage() {
       <main className="flex-1 px-4 py-8 text-center">
         <p className="text-neutral-600">Dein Warenkorb ist leer.</p>
         <Link
-          href="/"
+          href="/speisekarte"
           className="mt-4 inline-block rounded-full bg-terracotta px-5 py-2 text-sm font-semibold text-white"
         >
           Zur Speisekarte
@@ -384,7 +389,7 @@ export default function CheckoutPage() {
           </p>
         )}
         <Link
-          href="/"
+          href="/speisekarte"
           className="mt-4 inline-block rounded-full bg-terracotta px-5 py-2 text-sm font-semibold text-white"
         >
           Zurück zur Speisekarte

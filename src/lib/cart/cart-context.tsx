@@ -17,9 +17,12 @@ export type CartItem = {
   fotografUrl: string | null;
 };
 
+export type OrderType = "teslimat" | "gelal";
+
 type CartState = {
   items: CartItem[];
   not: string;
+  orderType: OrderType | null;
 };
 
 type AddableProduct = {
@@ -35,6 +38,7 @@ type CartContextValue = CartState & {
   decrement: (productId: string) => void;
   removeItem: (productId: string) => void;
   setNote: (text: string) => void;
+  setOrderType: (type: OrderType) => void;
   clear: () => void;
   itemCount: number;
   total: number;
@@ -44,24 +48,30 @@ const CartContext = createContext<CartContextValue | null>(null);
 
 const STORAGE_KEY = "lieferservice_sepet";
 
+const EMPTY_STATE: CartState = { items: [], not: "", orderType: null };
+
 function loadFromStorage(): CartState {
-  if (typeof window === "undefined") return { items: [], not: "" };
+  if (typeof window === "undefined") return EMPTY_STATE;
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (!raw) return { items: [], not: "" };
+    if (!raw) return EMPTY_STATE;
     const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed.items)) return { items: [], not: "" };
+    if (!Array.isArray(parsed.items)) return EMPTY_STATE;
     return {
       items: parsed.items,
       not: typeof parsed.not === "string" ? parsed.not : "",
+      orderType:
+        parsed.orderType === "teslimat" || parsed.orderType === "gelal"
+          ? parsed.orderType
+          : null,
     };
   } catch {
-    return { items: [], not: "" };
+    return EMPTY_STATE;
   }
 }
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [state, setState] = useState<CartState>({ items: [], not: "" });
+  const [state, setState] = useState<CartState>(EMPTY_STATE);
   const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
@@ -137,8 +147,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
       setState((prev) => ({ ...prev, not: text }));
     };
 
+    const setOrderType = (type: OrderType) => {
+      setState((prev) => ({ ...prev, orderType: type }));
+    };
+
     const clear = () => {
-      setState({ items: [], not: "" });
+      setState((prev) => ({ ...EMPTY_STATE, orderType: prev.orderType }));
     };
 
     const itemCount = state.items.reduce((sum, i) => sum + i.adet, 0);
@@ -151,6 +165,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       decrement,
       removeItem,
       setNote,
+      setOrderType,
       clear,
       itemCount,
       total,

@@ -8,7 +8,7 @@ export function SearchBar({
   onChange: (v: string) => void;
 }) {
   return (
-    <div className="relative z-10 -mt-6 px-5">
+    <div className="relative z-10 px-5 pt-3">
       <div className="flex items-center gap-2.5 rounded-2xl bg-white px-4.5 py-3.5 shadow-[0_10px_30px_rgba(36,28,22,0.14)]">
         <svg
           width="18"
