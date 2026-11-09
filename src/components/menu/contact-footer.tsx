@@ -40,6 +40,19 @@ function InstagramIcon() {
   );
 }
 
+function TiktokIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="shrink-0">
+      <path
+        d="M16.5 3c.3 2.1 1.6 3.5 3.5 3.7v2.7c-1.3.1-2.5-.3-3.5-1v6.4a5.1 5.1 0 1 1-5.1-5.1c.2 0 .4 0 .6.03v2.75a2.4 2.4 0 1 0 1.7 2.3V3h2.8z"
+        stroke="#C8963E"
+        strokeWidth="1.4"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 export function ContactFooter({
   settings,
   openingHours,
@@ -47,8 +60,8 @@ export function ContactFooter({
   settings: RestaurantSettings;
   openingHours: OpeningHour[];
 }) {
-  const { telefon, adres, instagram_url } = settings;
-  const hasContact = telefon || adres || instagram_url;
+  const { telefon, adres, instagram_url, tiktok_url } = settings;
+  const hasContact = telefon || adres || instagram_url || tiktok_url;
 
   if (!hasContact && openingHours.length === 0) return null;
 
@@ -88,6 +101,17 @@ export function ContactFooter({
           >
             <InstagramIcon />
             <span>Instagram</span>
+          </a>
+        )}
+        {tiktok_url && (
+          <a
+            href={tiktok_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-3 text-sm text-cream/85 hover:text-cream"
+          >
+            <TiktokIcon />
+            <span>TikTok</span>
           </a>
         )}
       </div>

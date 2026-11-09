@@ -116,18 +116,21 @@ function ContactEditor({
   const [telefon, setTelefon] = useState(settings.telefon ?? "");
   const [adres, setAdres] = useState(settings.adres ?? "");
   const [instagram, setInstagram] = useState(settings.instagram_url ?? "");
+  const [tiktok, setTiktok] = useState(settings.tiktok_url ?? "");
 
   useEffect(() => {
     setTelefon(settings.telefon ?? "");
     setAdres(settings.adres ?? "");
     setInstagram(settings.instagram_url ?? "");
-  }, [settings.telefon, settings.adres, settings.instagram_url]);
+    setTiktok(settings.tiktok_url ?? "");
+  }, [settings.telefon, settings.adres, settings.instagram_url, settings.tiktok_url]);
 
   async function save() {
     await updateSettings({
       telefon: telefon.trim() || null,
       adres: adres.trim() || null,
       instagram_url: instagram.trim() || null,
+      tiktok_url: tiktok.trim() || null,
     });
     onSaved();
   }
@@ -153,6 +156,13 @@ function ContactEditor({
         placeholder="Instagram-Link (z. B. https://instagram.com/bugday.krefeld)"
         value={instagram}
         onChange={(e) => setInstagram(e.target.value)}
+        onBlur={save}
+        className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm"
+      />
+      <input
+        placeholder="TikTok-Link (z. B. https://tiktok.com/@bugdaykrefeld)"
+        value={tiktok}
+        onChange={(e) => setTiktok(e.target.value)}
         onBlur={save}
         className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm"
       />

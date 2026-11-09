@@ -97,6 +97,7 @@ export type RestaurantSettings = {
   telefon: string | null;
   adres: string | null;
   instagram_url: string | null;
+  tiktok_url: string | null;
 };
 
 export type DeliveryZoneAdmin = {
