@@ -11,7 +11,7 @@ export function ProductCard({ product }: { product: Product }) {
 
   return (
     <div
-      className={`flex gap-3.5 border-b border-border-warm py-4 last:border-b-0 md:flex-col md:gap-0 md:self-start md:rounded-2xl md:border-0 md:bg-white md:py-0 md:shadow-[0_4px_16px_rgba(36,28,22,0.08)] ${
+      className={`flex gap-3.5 border-b border-border-warm py-4 last:border-b-0 md:flex-col md:gap-0 md:self-start md:overflow-hidden md:rounded-2xl md:border-0 md:bg-white md:py-0 md:shadow-[0_4px_16px_rgba(36,28,22,0.08)] ${
         available ? "" : "opacity-50"
       }`}
     >
@@ -54,7 +54,7 @@ export function ProductCard({ product }: { product: Product }) {
         )}
       </div>
 
-      <div className="order-1 min-w-0 flex-1 md:order-2 md:p-5">
+      <div className="order-1 min-w-0 flex-1 md:order-2 md:bg-cream md:p-5">
         <h3 className="text-[15.5px] font-semibold text-charcoal md:text-base">
           {product.isim}
         </h3>

@@ -18,7 +18,7 @@ export function FeaturedSection({ products }: { products: Product[] }) {
         {products.map((p) => (
           <div
             key={p.id}
-            className="w-[168px] shrink-0 md:w-auto md:rounded-2xl md:bg-white md:shadow-[0_4px_16px_rgba(36,28,22,0.08)]"
+            className="w-[168px] shrink-0 md:w-auto md:overflow-hidden md:rounded-2xl md:bg-white md:shadow-[0_4px_16px_rgba(36,28,22,0.08)]"
           >
             <div className="relative h-[168px] w-[168px] overflow-hidden rounded-[18px] bg-white shadow-[0_8px_20px_rgba(36,28,22,0.12)] md:h-auto md:w-full md:aspect-square md:rounded-none md:shadow-none">
               {p.fotograf_url ? (
@@ -51,12 +51,14 @@ export function FeaturedSection({ products }: { products: Product[] }) {
                 </button>
               )}
             </div>
-            <p className="mt-2.5 truncate text-sm font-semibold text-charcoal md:px-4 md:pt-1">
-              {p.isim}
-            </p>
-            <p className="text-[13.5px] font-semibold text-terracotta md:px-4 md:pb-4">
-              {formatPrice(p.fiyat)}
-            </p>
+            <div className="md:bg-cream md:px-4 md:pt-1 md:pb-4">
+              <p className="mt-2.5 truncate text-sm font-semibold text-charcoal md:mt-0">
+                {p.isim}
+              </p>
+              <p className="text-[13.5px] font-semibold text-terracotta">
+                {formatPrice(p.fiyat)}
+              </p>
+            </div>
           </div>
         ))}
       </div>
