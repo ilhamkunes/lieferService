@@ -1,6 +1,7 @@
 import { RESTAURANT_NAME, RESTAURANT_TAGLINE } from "@/lib/config";
 import { AccountLink } from "@/components/account/account-link";
 import { FoodPlaceholderIcon } from "@/components/ui/food-placeholder-icon";
+import { WheatIcon } from "@/components/ui/wheat-icon";
 import type { Availability } from "@/lib/availability";
 
 export function RestaurantHeader({
@@ -29,6 +30,8 @@ export function RestaurantHeader({
 
       <div className="absolute inset-0 bg-gradient-to-b from-charcoal/55 via-charcoal/15 via-30% to-charcoal/95" />
 
+      <WheatIcon className="absolute top-6 right-6 h-20 w-7 rotate-[18deg] text-gold/70" />
+
       <div className="absolute inset-x-4 top-4 flex items-center justify-between">
         <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border-2 border-cream/85 bg-gold">
           {logoUrl ? (
@@ -48,6 +51,9 @@ export function RestaurantHeader({
       <div className="absolute inset-x-5 bottom-6">
         <p className="mb-1.5 text-[11px] font-bold tracking-[0.22em] text-gold uppercase">
           {RESTAURANT_TAGLINE}
+        </p>
+        <p className="font-display mb-0.5 text-lg text-cream/90">
+          Herzlich willkommen bei
         </p>
         <h1 className="font-display mb-2.5 text-[46px] leading-none font-semibold text-cream">
           {RESTAURANT_NAME}
