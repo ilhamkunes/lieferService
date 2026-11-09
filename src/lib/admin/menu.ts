@@ -89,7 +89,7 @@ export async function updateOpeningHour(
 export async function getDeliveryZonesAdmin(): Promise<DeliveryZoneAdmin[]> {
   const { data, error } = await supabaseBrowser
     .from("delivery_zones")
-    .select("id, posta_kodu, teslimat_ucreti, minimum_siparis, aktif")
+    .select("id, posta_kodu, teslimat_ucreti, minimum_siparis, ucretsiz_esik, aktif")
     .order("posta_kodu");
   if (error) throw error;
   return data;
@@ -99,6 +99,7 @@ export async function addDeliveryZone(input: {
   posta_kodu: string;
   teslimat_ucreti: number;
   minimum_siparis: number;
+  ucretsiz_esik?: number | null;
 }): Promise<void> {
   const { error } = await supabaseBrowser.from("delivery_zones").insert(input);
   if (error) throw error;

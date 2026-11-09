@@ -104,5 +104,6 @@ export type DeliveryZoneAdmin = {
   posta_kodu: string;
   teslimat_ucreti: number;
   minimum_siparis: number;
+  ucretsiz_esik: number | null;
   aktif: boolean;
 };

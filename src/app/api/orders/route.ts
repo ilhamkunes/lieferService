@@ -161,7 +161,7 @@ export async function POST(request: Request) {
 
     const { data: zone, error: zoneErr } = await supabaseAdmin
       .from("delivery_zones")
-      .select("posta_kodu, teslimat_ucreti, minimum_siparis")
+      .select("posta_kodu, teslimat_ucreti, minimum_siparis, ucretsiz_esik")
       .eq("posta_kodu", teslimat.posta_kodu.trim())
       .eq("aktif", true)
       .maybeSingle();
@@ -188,7 +188,10 @@ export async function POST(request: Request) {
       );
     }
 
-    teslimatUcreti = zone.teslimat_ucreti;
+    teslimatUcreti =
+      zone.ucretsiz_esik != null && araToplam >= zone.ucretsiz_esik
+        ? 0
+        : zone.teslimat_ucreti;
     orderFields = {
       sokak: teslimat.sokak.trim(),
       numara: teslimat.numara.trim(),

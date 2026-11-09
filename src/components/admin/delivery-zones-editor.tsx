@@ -10,7 +10,12 @@ import {
 import type { DeliveryZoneAdmin } from "@/lib/supabase/types";
 import { formatPrice } from "@/lib/config";
 
-const EMPTY = { posta_kodu: "", teslimat_ucreti: "", minimum_siparis: "" };
+const EMPTY = {
+  posta_kodu: "",
+  teslimat_ucreti: "",
+  minimum_siparis: "",
+  ucretsiz_esik: "",
+};
 
 export function DeliveryZonesEditor() {
   const [zones, setZones] = useState<DeliveryZoneAdmin[]>([]);
@@ -28,6 +33,9 @@ export function DeliveryZonesEditor() {
       posta_kodu: form.posta_kodu.trim(),
       teslimat_ucreti: Number(form.teslimat_ucreti) || 0,
       minimum_siparis: Number(form.minimum_siparis) || 0,
+      ucretsiz_esik: form.ucretsiz_esik.trim()
+        ? Number(form.ucretsiz_esik)
+        : null,
     });
     setForm(EMPTY);
     setShowForm(false);
@@ -61,6 +69,8 @@ export function DeliveryZonesEditor() {
               <p className="font-medium">{z.posta_kodu}</p>
               <p className="text-xs">
                 {formatPrice(z.teslimat_ucreti)} · Mindest. {formatPrice(z.minimum_siparis)}
+                {z.ucretsiz_esik != null &&
+                  ` · ab ${formatPrice(z.ucretsiz_esik)} kostenlos`}
               </p>
             </div>
             <div className="flex gap-2">
@@ -104,6 +114,14 @@ export function DeliveryZonesEditor() {
             value={form.minimum_siparis}
             onChange={(e) =>
               setForm((f) => ({ ...f, minimum_siparis: e.target.value }))
+            }
+            className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm"
+          />
+          <input
+            placeholder="Kostenlos ab (€) – optional"
+            value={form.ucretsiz_esik}
+            onChange={(e) =>
+              setForm((f) => ({ ...f, ucretsiz_esik: e.target.value }))
             }
             className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm"
           />

@@ -1,7 +1,7 @@
 "use client";
 
 import { formatPrice } from "@/lib/config";
-import type { DeliveryZone } from "@/lib/supabase/delivery";
+import { effectiveDeliveryFee, type DeliveryZone } from "@/lib/supabase/delivery";
 import { FormField, inputClass, inputErrorClass } from "./form-field";
 
 export type DeliveryFormValues = {
@@ -93,7 +93,12 @@ export function DeliveryFields({
       )}
       {!zoneLoading && zone && (
         <div className="rounded-lg bg-neutral-50 px-3 py-2 text-sm text-neutral-600">
-          <p>Liefergebühr: {formatPrice(zone.teslimat_ucreti)}</p>
+          <p>
+            Liefergebühr:{" "}
+            {effectiveDeliveryFee(zone, cartTotal) === 0
+              ? "Kostenlos"
+              : formatPrice(effectiveDeliveryFee(zone, cartTotal))}
+          </p>
           <p>Mindestbestellwert: {formatPrice(zone.minimum_siparis)}</p>
           {cartTotal < zone.minimum_siparis && (
             <p className="mt-1 font-medium text-red-600">
@@ -101,6 +106,14 @@ export function DeliveryFields({
               Mindestbestellwert.
             </p>
           )}
+          {zone.ucretsiz_esik != null &&
+            cartTotal >= zone.minimum_siparis &&
+            cartTotal < zone.ucretsiz_esik && (
+              <p className="mt-1 text-terracotta">
+                Noch {formatPrice(zone.ucretsiz_esik - cartTotal)} bis zur
+                kostenlosen Lieferung.
+              </p>
+            )}
         </div>
       )}
       {errors.zone && (

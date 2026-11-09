@@ -8,7 +8,11 @@ import { getOpeningHours } from "@/lib/supabase/menu";
 import { getRestaurantSettings } from "@/lib/supabase/settings";
 import { getAvailability } from "@/lib/availability";
 import { getPickupSlotsForToday } from "@/lib/pickup";
-import { findDeliveryZone, type DeliveryZone } from "@/lib/supabase/delivery";
+import {
+  findDeliveryZone,
+  effectiveDeliveryFee,
+  type DeliveryZone,
+} from "@/lib/supabase/delivery";
 import {
   isValidEmail,
   isValidGermanPostalCode,
@@ -514,7 +518,13 @@ export default function CheckoutPage() {
           />
         )}
 
-        <OrderSummary deliveryFee={tur === "teslimat" ? zone?.teslimat_ucreti : undefined} />
+        <OrderSummary
+          deliveryFee={
+            tur === "teslimat" && zone
+              ? effectiveDeliveryFee(zone, cart.total)
+              : undefined
+          }
+        />
 
         {submitError && (
           <p className="rounded-lg bg-red-50 px-3 py-2 text-sm font-medium text-red-700">
