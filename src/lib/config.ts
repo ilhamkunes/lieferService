@@ -1,5 +1,6 @@
 // Tek yerden ayar: restoran adini degistirmek icin sadece burayi duzenle.
 export const RESTAURANT_NAME = "Bugday";
+export const RESTAURANT_TAGLINE = "Uyghurisches Restaurant · Krefeld";
 
 export const CURRENCY = "EUR";
 export const LOCALE = "de-DE";

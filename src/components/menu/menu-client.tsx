@@ -38,7 +38,7 @@ export function MenuClient({
           }
         }
       },
-      { rootMargin: "-56px 0px -70% 0px", threshold: 0 }
+      { rootMargin: "-64px 0px -70% 0px", threshold: 0 }
     );
 
     for (const g of grouped) {
@@ -82,9 +82,9 @@ export function MenuClient({
       />
 
       {searchResults ? (
-        <div className="px-4 py-2">
+        <div className="px-5 py-2">
           {searchResults.length === 0 ? (
-            <p className="py-8 text-center text-sm text-neutral-400">
+            <p className="py-8 text-center text-sm text-muted">
               Keine Treffer für &quot;{search}&quot;.
             </p>
           ) : (
@@ -92,7 +92,7 @@ export function MenuClient({
           )}
         </div>
       ) : (
-        <div className="px-4 py-2">
+        <div className="px-5 py-2">
           {grouped.map((g) => (
             <section
               key={g.category.id}
@@ -100,18 +100,26 @@ export function MenuClient({
               ref={(el) => {
                 sectionRefs.current[g.category.id] = el;
               }}
-              style={{ scrollMarginTop: 56 }}
-              className="py-3"
+              style={{ scrollMarginTop: 64 }}
+              className="py-4"
             >
-              <h2 className="mb-1 text-base font-semibold text-neutral-900">
+              <h2 className="font-display mb-1 text-[19px] font-semibold text-charcoal">
                 {g.category.isim}
               </h2>
               {g.products.length === 0 ? (
-                <p className="text-sm text-neutral-400">
+                <p className="text-sm text-muted">
                   Diese Kategorie ist noch leer.
                 </p>
               ) : (
-                g.products.map((p) => <ProductCard key={p.id} product={p} />)
+                <>
+                  <p className="mb-3 text-[13px] text-muted">
+                    {g.products.length}{" "}
+                    {g.products.length === 1 ? "Artikel" : "Artikel"}
+                  </p>
+                  {g.products.map((p) => (
+                    <ProductCard key={p.id} product={p} />
+                  ))}
+                </>
               )}
             </section>
           ))}

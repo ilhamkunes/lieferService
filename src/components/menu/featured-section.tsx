@@ -10,12 +10,14 @@ export function FeaturedSection({ products }: { products: Product[] }) {
   if (products.length === 0) return null;
 
   return (
-    <section className="px-4 py-4">
-      <h2 className="mb-2 text-base font-semibold text-neutral-900">Beliebt</h2>
-      <div className="flex gap-3 overflow-x-auto [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+    <section className="px-5 pt-6 pb-2">
+      <h2 className="font-display mb-3.5 text-[19px] font-semibold text-charcoal">
+        Beliebt diese Woche
+      </h2>
+      <div className="flex gap-3.5 overflow-x-auto pb-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
         {products.map((p) => (
-          <div key={p.id} className="relative w-28 shrink-0">
-            <div className="h-28 w-28 overflow-hidden rounded-lg bg-orange-50">
+          <div key={p.id} className="w-[168px] shrink-0">
+            <div className="relative h-[168px] w-[168px] overflow-hidden rounded-[18px] bg-orange-50 shadow-[0_8px_20px_rgba(36,28,22,0.12)]">
               {p.fotograf_url ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
@@ -33,16 +35,25 @@ export function FeaturedSection({ products }: { products: Product[] }) {
                   type="button"
                   onClick={() => addItem(p)}
                   aria-label={`${p.isim} hinzufügen`}
-                  className="absolute bottom-1 right-1 flex h-6 w-6 items-center justify-center rounded-full bg-white text-base font-bold text-orange-500 shadow"
+                  className="absolute right-2 bottom-2 flex h-8 w-8 items-center justify-center rounded-full bg-cream text-terracotta shadow-[0_2px_8px_rgba(0,0,0,0.25)]"
                 >
-                  +
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path
+                      d="M12 5v14M5 12h14"
+                      stroke="currentColor"
+                      strokeWidth="2.6"
+                      strokeLinecap="round"
+                    />
+                  </svg>
                 </button>
               )}
             </div>
-            <p className="mt-1 truncate text-sm font-medium text-neutral-900">
+            <p className="mt-2.5 truncate text-sm font-semibold text-charcoal">
               {p.isim}
             </p>
-            <p className="text-sm text-neutral-500">{formatPrice(p.fiyat)}</p>
+            <p className="text-[13.5px] font-semibold text-terracotta">
+              {formatPrice(p.fiyat)}
+            </p>
           </div>
         ))}
       </div>

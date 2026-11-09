@@ -111,14 +111,14 @@ function LoginForm() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="deine@email.de"
-          className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm focus:border-orange-500 focus:outline-none"
+          className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm focus:border-terracotta focus:outline-none"
         />
         <input
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Passwort"
-          className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm focus:border-orange-500 focus:outline-none"
+          className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm focus:border-terracotta focus:outline-none"
         />
 
         {error && <p className="text-sm text-red-600">{error}</p>}
@@ -127,7 +127,7 @@ function LoginForm() {
         <button
           type="submit"
           disabled={submitting}
-          className="w-full rounded-full bg-orange-500 py-3 text-sm font-semibold text-white disabled:opacity-50"
+          className="w-full rounded-full bg-terracotta py-3 text-sm font-semibold text-white disabled:opacity-50"
         >
           {submitting
             ? "Einen Moment…"
@@ -158,7 +158,7 @@ function LoginForm() {
                 setError(null);
                 setInfo(null);
               }}
-              className="font-semibold text-orange-600"
+              className="font-semibold text-terracotta"
             >
               Jetzt registrieren
             </button>
@@ -173,7 +173,7 @@ function LoginForm() {
                 setError(null);
                 setInfo(null);
               }}
-              className="font-semibold text-orange-600"
+              className="font-semibold text-terracotta"
             >
               Anmelden
             </button>

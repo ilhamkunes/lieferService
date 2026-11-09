@@ -3,7 +3,7 @@
 import type { ReactNode } from "react";
 
 export const inputClass =
-  "w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm focus:border-orange-500 focus:outline-none";
+  "w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm focus:border-terracotta focus:outline-none";
 export const inputErrorClass =
   "w-full rounded-lg border border-red-400 px-3 py-2 text-sm focus:border-red-500 focus:outline-none";
 

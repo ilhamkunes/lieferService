@@ -318,7 +318,7 @@ export default function CheckoutPage() {
           {success.paid && (
             <Link
               href="/"
-              className="mt-4 inline-block rounded-full bg-orange-500 px-5 py-2 text-sm font-semibold text-white"
+              className="mt-4 inline-block rounded-full bg-terracotta px-5 py-2 text-sm font-semibold text-white"
             >
               Zurück zur Speisekarte
             </Link>
@@ -345,7 +345,7 @@ export default function CheckoutPage() {
         <p className="text-neutral-600">Dein Warenkorb ist leer.</p>
         <Link
           href="/"
-          className="mt-4 inline-block rounded-full bg-orange-500 px-5 py-2 text-sm font-semibold text-white"
+          className="mt-4 inline-block rounded-full bg-terracotta px-5 py-2 text-sm font-semibold text-white"
         >
           Zur Speisekarte
         </Link>
@@ -370,7 +370,7 @@ export default function CheckoutPage() {
         )}
         <Link
           href="/"
-          className="mt-4 inline-block rounded-full bg-orange-500 px-5 py-2 text-sm font-semibold text-white"
+          className="mt-4 inline-block rounded-full bg-terracotta px-5 py-2 text-sm font-semibold text-white"
         >
           Zurück zur Speisekarte
         </Link>
@@ -389,7 +389,7 @@ export default function CheckoutPage() {
           onClick={() => setTur("teslimat")}
           className={`rounded-xl py-3 text-sm font-semibold disabled:opacity-40 ${
             tur === "teslimat"
-              ? "bg-orange-500 text-white"
+              ? "bg-terracotta text-white"
               : "bg-neutral-100 text-neutral-600"
           }`}
         >
@@ -401,7 +401,7 @@ export default function CheckoutPage() {
           onClick={() => setTur("gelal")}
           className={`rounded-xl py-3 text-sm font-semibold disabled:opacity-40 ${
             tur === "gelal"
-              ? "bg-orange-500 text-white"
+              ? "bg-terracotta text-white"
               : "bg-neutral-100 text-neutral-600"
           }`}
         >
@@ -417,7 +417,7 @@ export default function CheckoutPage() {
 
       {!user && (
         <p className="mb-4 text-sm text-neutral-500">
-          <Link href="/konto/anmelden" className="font-semibold text-orange-600">
+          <Link href="/konto/anmelden" className="font-semibold text-terracotta">
             Anmelden
           </Link>{" "}
           für schnelleres Bestellen beim nächsten Mal.
@@ -474,7 +474,7 @@ export default function CheckoutPage() {
                       onClick={() => selectAddress(a)}
                       className={`rounded-full px-4 py-2 text-sm font-medium ${
                         selectedAddressId === a.id
-                          ? "bg-orange-500 text-white"
+                          ? "bg-terracotta text-white"
                           : "bg-neutral-100 text-neutral-700"
                       }`}
                     >
@@ -525,7 +525,7 @@ export default function CheckoutPage() {
         <button
           type="submit"
           disabled={submitting}
-          className="w-full rounded-full bg-orange-500 py-3 text-base font-semibold text-white disabled:opacity-50"
+          className="w-full rounded-full bg-terracotta py-3 text-base font-semibold text-white disabled:opacity-50"
         >
           {submitting ? "Wird gesendet…" : "Jetzt bestellen"}
         </button>

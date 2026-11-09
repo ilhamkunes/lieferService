@@ -31,18 +31,8 @@ export async function MenuSection() {
       <RestaurantHeader
         kapakFotoUrl={settings.kapak_foto_url}
         logoUrl={settings.logo_url}
+        status={status}
       />
-
-      {status.isOpen ? (
-        <div className="bg-green-50 px-4 py-2 text-center text-sm font-medium text-green-700">
-          Geöffnet – wir nehmen jetzt Bestellungen an
-        </div>
-      ) : (
-        <div className="bg-red-50 px-4 py-2 text-center text-sm font-medium text-red-700">
-          Geschlossen
-          {status.nextOpenLabel ? ` – öffnet wieder: ${status.nextOpenLabel}` : ""}
-        </div>
-      )}
 
       <MenuClient grouped={grouped} featured={featured} />
 

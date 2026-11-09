@@ -47,7 +47,7 @@ export default function NewPasswordPage() {
         </p>
         <Link
           href="/konto/anmelden"
-          className="mt-4 inline-block rounded-full bg-orange-500 px-5 py-2 text-sm font-semibold text-white"
+          className="mt-4 inline-block rounded-full bg-terracotta px-5 py-2 text-sm font-semibold text-white"
         >
           Zurück zur Anmeldung
         </Link>
@@ -66,13 +66,13 @@ export default function NewPasswordPage() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Neues Passwort"
-          className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm focus:border-orange-500 focus:outline-none"
+          className="w-full rounded-lg border border-neutral-200 px-3 py-2 text-sm focus:border-terracotta focus:outline-none"
         />
         {error && <p className="text-sm text-red-600">{error}</p>}
         <button
           type="submit"
           disabled={submitting}
-          className="w-full rounded-full bg-orange-500 py-3 text-sm font-semibold text-white disabled:opacity-50"
+          className="w-full rounded-full bg-terracotta py-3 text-sm font-semibold text-white disabled:opacity-50"
         >
           {submitting ? "Wird gespeichert…" : "Passwort speichern"}
         </button>

@@ -148,7 +148,7 @@ export function AddressManager() {
               type="button"
               onClick={handleAdd}
               disabled={saving}
-              className="rounded-full bg-orange-500 px-4 py-1.5 text-sm font-semibold text-white disabled:opacity-50"
+              className="rounded-full bg-terracotta px-4 py-1.5 text-sm font-semibold text-white disabled:opacity-50"
             >
               {saving ? "Speichert…" : "Speichern"}
             </button>
@@ -168,7 +168,7 @@ export function AddressManager() {
         <button
           type="button"
           onClick={() => setShowForm(true)}
-          className="mt-3 text-sm font-semibold text-orange-600"
+          className="mt-3 text-sm font-semibold text-terracotta"
         >
           + Neue Adresse
         </button>

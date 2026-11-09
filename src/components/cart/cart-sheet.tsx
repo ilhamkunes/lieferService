@@ -114,7 +114,7 @@ export function CartSheet({ onClose }: { onClose: () => void }) {
             <Link
               href="/checkout"
               onClick={onClose}
-              className="block w-full rounded-full bg-orange-500 py-3 text-center text-base font-semibold text-white active:bg-orange-600"
+              className="block w-full rounded-full bg-terracotta py-3 text-center text-base font-semibold text-cream active:bg-terracotta-dark"
             >
               Zur Kasse
             </Link>

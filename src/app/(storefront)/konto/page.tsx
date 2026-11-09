@@ -36,7 +36,7 @@ export default function AccountPage() {
     <main className="flex-1 px-4 py-6 pb-28">
       <Link
         href="/"
-        className="mb-3 inline-block text-sm font-semibold text-orange-600"
+        className="mb-3 inline-block text-sm font-semibold text-terracotta"
       >
         ← Zur Speisekarte
       </Link>

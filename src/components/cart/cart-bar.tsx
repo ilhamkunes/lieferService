@@ -20,7 +20,7 @@ export function CartBar() {
         <button
           type="button"
           onClick={() => setOpen(true)}
-          className="flex w-full items-center justify-between rounded-full bg-orange-500 px-5 py-3 text-white shadow-lg active:bg-orange-600"
+          className="flex w-full items-center justify-between rounded-full bg-terracotta px-5 py-4 font-semibold text-cream shadow-[0_12px_28px_rgba(181,72,42,0.4)] active:bg-terracotta-dark"
         >
           <span className="font-semibold">
             {itemCount} {itemCount === 1 ? "Artikel" : "Artikel"}

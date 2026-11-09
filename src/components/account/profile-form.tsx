@@ -42,7 +42,7 @@ export function ProfileForm({ user }: { user: User }) {
           type="button"
           onClick={handleSave}
           disabled={saving}
-          className="rounded-full bg-orange-500 px-4 py-1.5 text-sm font-semibold text-white disabled:opacity-50"
+          className="rounded-full bg-terracotta px-4 py-1.5 text-sm font-semibold text-white disabled:opacity-50"
         >
           {saving ? "Speichert…" : saved ? "Gespeichert ✓" : "Speichern"}
         </button>
