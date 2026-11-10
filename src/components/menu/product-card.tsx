@@ -11,12 +11,12 @@ export function ProductCard({ product }: { product: Product }) {
 
   return (
     <div
-      className={`flex gap-3.5 border-b border-border-warm py-4 last:border-b-0 md:flex-col md:gap-0 md:self-start md:overflow-hidden md:rounded-2xl md:border-0 md:bg-white md:py-0 md:shadow-[0_4px_16px_rgba(36,28,22,0.08)] ${
+      className={`flex items-center gap-3.5 border-b border-border-warm py-4 last:border-b-0 md:flex-col md:items-stretch md:gap-0 md:self-start md:overflow-hidden md:rounded-2xl md:border-0 md:bg-white md:py-0 md:shadow-[0_4px_16px_rgba(36,28,22,0.08)] ${
         available ? "" : "opacity-50"
       }`}
     >
       <div className="relative order-2 shrink-0 md:order-1 md:w-full">
-        <div className="h-[76px] w-[76px] overflow-hidden rounded-2xl bg-white shadow-[0_4px_14px_rgba(36,28,22,0.12)] md:aspect-square md:h-auto md:w-full md:rounded-none md:shadow-none">
+        <div className="h-[84px] w-[84px] overflow-hidden rounded-2xl bg-white shadow-[0_4px_14px_rgba(36,28,22,0.12)] md:aspect-square md:h-auto md:w-full md:rounded-none md:shadow-none">
           {product.fotograf_url ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
@@ -26,7 +26,7 @@ export function ProductCard({ product }: { product: Product }) {
             />
           ) : (
             <div className="flex h-full w-full items-center justify-center">
-              <FoodPlaceholderIcon className="h-7 w-7 text-orange-200" />
+              <FoodPlaceholderIcon className="h-8 w-8 text-orange-200" />
             </div>
           )}
         </div>
@@ -36,7 +36,7 @@ export function ProductCard({ product }: { product: Product }) {
             type="button"
             onClick={() => addItem(product)}
             aria-label={`${product.isim} hinzufügen`}
-            className="absolute -right-2 -bottom-2 flex h-7 w-7 items-center justify-center rounded-full border border-border-warm bg-white text-terracotta shadow-[0_3px_8px_rgba(36,28,22,0.18)] md:right-3 md:bottom-3 md:h-9 md:w-9"
+            className="absolute right-2 bottom-2 flex h-7 w-7 items-center justify-center rounded-full border border-border-warm bg-white text-terracotta shadow-[0_3px_8px_rgba(36,28,22,0.18)] md:right-3 md:bottom-3 md:h-9 md:w-9"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path
@@ -48,7 +48,7 @@ export function ProductCard({ product }: { product: Product }) {
             </svg>
           </button>
         ) : (
-          <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-charcoal px-2 py-0.5 text-[10px] font-medium whitespace-nowrap text-cream md:bottom-3">
+          <span className="absolute bottom-2 left-1/2 -translate-x-1/2 rounded-full bg-charcoal px-2 py-0.5 text-[10px] font-medium whitespace-nowrap text-cream md:bottom-3">
             Ausverkauft
           </span>
         )}
